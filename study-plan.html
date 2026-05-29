@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLMs From Scratch Tutor Plan</title>
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --paper: #ffffff;
+      --ink: #17202a;
+      --muted: #607083;
+      --line: #d8dee8;
+      --soft: #eef2f7;
+      --accent: #1f5fbf;
+      --todo: #697386;
+      --progress: #a16207;
+      --done: #147a3d;
+      --risk: #b42318;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    header {
+      background: #111827;
+      color: #fff;
+      padding: 38px 24px 30px;
+    }
+
+    header .wrap,
+    main {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2.1rem, 4.5vw, 4.4rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 1.35rem;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 1.04rem;
+    }
+
+    h4 {
+      margin: 16px 0 6px;
+      font-size: 0.95rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code,
+    pre {
+      background: var(--soft);
+      border-radius: 6px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.9em;
+    }
+
+    code {
+      padding: 2px 5px;
+    }
+
+    pre {
+      overflow-x: auto;
+      padding: 14px;
+      margin: 10px 0 0;
+      line-height: 1.45;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 22px;
+      padding: 24px;
+    }
+
+    nav {
+      position: sticky;
+      top: 18px;
+      align-self: start;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    nav a {
+      display: block;
+      padding: 6px 0;
+      color: #243244;
+      font-weight: 600;
+    }
+
+    .content {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card,
+    .chapter {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .summary-grid,
+    .three-grid,
+    .two-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .three-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .two-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fbfcfe;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .todo {
+      color: var(--todo);
+    }
+
+    .progress {
+      color: var(--progress);
+    }
+
+    .done {
+      color: var(--done);
+    }
+
+    .risk {
+      color: var(--risk);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chapter-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+    }
+
+    .chapter-title {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .chapter-title h2 {
+      margin: 0;
+    }
+
+    .phase {
+      border-left: 4px solid var(--accent);
+      padding-left: 12px;
+      margin-top: 14px;
+    }
+
+    .checklist,
+    .plain-list {
+      margin: 8px 0 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      margin: 6px 0;
+      align-items: start;
+    }
+
+    .plain-list {
+      list-style: disc;
+      padding-left: 20px;
+    }
+
+    .plain-list li {
+      margin: 5px 0;
+    }
+
+    .deliverable {
+      display: inline-block;
+      margin: 3px 4px 3px 0;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--soft);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.83rem;
+      color: #263445;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--line);
+      padding: 9px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--soft);
+    }
+
+    .repo-map {
+      columns: 2;
+      column-gap: 20px;
+    }
+
+    .repo-map pre {
+      break-inside: avoid;
+      margin-bottom: 16px;
+    }
+
+    .callout {
+      border-left: 4px solid var(--progress);
+      padding: 10px 12px;
+      background: #fffbeb;
+      border-radius: 0 8px 8px 0;
+    }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        position: static;
+      }
+
+      .summary-grid,
+      .three-grid,
+      .two-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chapter-head {
+        grid-template-columns: 1fr;
+      }
+
+      .repo-map {
+        columns: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>LLMs From Scratch Tutor Plan</h1>
+      <p>Build the book concepts yourself, then prove them with pytest. The official repo remains reference material; your implementations live in <code>student/</code>.</p>
+      <div class="legend">
+        <span class="status todo">Todo</span>
+        <span class="status progress">In Progress</span>
+        <span class="status done">Done</span>
+        <span class="status risk">Needs Review</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <nav aria-label="Page sections">
+      <h3>Navigation</h3>
+      <a href="#operating-model">Operating Model</a>
+      <a href="#workspace">Workspace</a>
+      <a href="#pytest">Pytest Curriculum</a>
+      <a href="#milestones">Milestones</a>
+      <a href="#chapter-setup">Setup + Appendix A</a>
+      <a href="#chapter-1">Chapter 1</a>
+      <a href="#chapter-2">Chapter 2</a>
+      <a href="#chapter-3">Chapter 3</a>
+      <a href="#chapter-4">Chapter 4</a>
+      <a href="#chapter-5">Chapter 5</a>
+      <a href="#chapter-6">Chapter 6</a>
+      <a href="#chapter-7">Chapter 7</a>
+      <a href="#appendices">Appendices D/E</a>
+      <a href="#repo">Repo Structure</a>
+      <a href="#commands">Commands</a>
+    </nav>
+
+    <div class="content">
+      <section class="card" id="operating-model">
+        <h2>Operating Model</h2>
+        <div class="summary-grid">
+          <div class="mini">
+            <h3>Role Split</h3>
+            <p>You implement and test. I review, question, guide, and explain failures.</p>
+          </div>
+          <div class="mini">
+            <h3>Default Hint Policy</h3>
+            <p>Hints first. Full solutions only when you explicitly ask for them.</p>
+          </div>
+          <div class="mini">
+            <h3>Study Unit</h3>
+            <p>Read one section, summarize it, build a minimal version, test it, then compare.</p>
+          </div>
+          <div class="mini">
+            <h3>Quality Bar</h3>
+            <p>A topic is done when tests prove the core behavior and you can explain the tensor flow.</p>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Per-Topic Loop</h3>
+          <ol>
+            <li>Read the relevant book section and repo notebook.</li>
+            <li>Write a short summary in your own words.</li>
+            <li>Answer checkpoint questions without looking at the code.</li>
+            <li>Implement a small, direct version in <code>student/</code>.</li>
+            <li>Write pytest tests before or alongside the implementation.</li>
+            <li>Run tests, inspect failures, fix the implementation, and review edge cases.</li>
+            <li>Compare against the official code only after your version works.</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="card" id="workspace">
+        <h2>Workspace Contract</h2>
+        <div class="two-grid">
+          <div>
+            <h3>Your Files</h3>
+            <pre><code>student/
+  README.md
+  ch01/
+  ch02/
+  ch03/
+  ch04/
+  ch05/
+  ch06/
+  ch07/
+  tests/</code></pre>
+          </div>
+          <div>
+            <h3>Recommended Naming</h3>
+            <pre><code>student/ch02/tokenizer.py
+student/ch02/dataset.py
+student/tests/test_ch02_tokenizer.py
+student/tests/test_ch02_dataset.py
+
+student/ch03/attention.py
+student/tests/test_ch03_attention.py</code></pre>
+          </div>
+        </div>
+        <p class="callout">Keep the official files in <code>LLMs-from-scratch/</code> unchanged unless you are intentionally experimenting. Your goal is to rebuild, not to patch the book code.</p>
+      </section>
+
+      <section class="card" id="pytest">
+        <h2>Pytest Curriculum</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Skill</th>
+              <th>Use It When</th>
+              <th>Example Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="status todo">Todo</span></td>
+              <td>Basic assertions</td>
+              <td>Checking exact values, lengths, types, and simple behavior.</td>
+              <td><code>assert vocab["hello"] == 0</code></td>
+            </tr>
+            <tr>
+              <td><span class="status todo">Todo</span></td>
+              <td>Fixtures</td>
+              <td>Reusing tiny vocabularies, configs, toy datasets, and seeded models.</td>
+              <td><code>tiny_gpt_config</code></td>
+            </tr>
+            <tr>
+              <td><span class="status todo">Todo</span></td>
+              <td>Parametrization</td>
+              <td>Testing many edge cases without repeating test functions.</td>
+              <td>empty text, short text, unknown token</td>
+            </tr>
+            <tr>
+              <td><span class="status todo">Todo</span></td>
+              <td>Numerical tolerances</td>
+              <td>Testing tensors where exact floating-point equality is wrong.</td>
+              <td><code>torch.allclose(actual, expected, atol=1e-5)</code></td>
+            </tr>
+            <tr>
+              <td><span class="status todo">Todo</span></td>
+              <td>Randomness control</td>
+              <td>Making dropout, sampling, initialization, and training tests stable.</td>
+              <td><code>torch.manual_seed(123)</code></td>
+            </tr>
+            <tr>
+              <td><span class="status todo">Todo</span></td>
+              <td>Side-effect tests</td>
+              <td>Checking training changes parameters and evaluation does not.</td>
+              <td>compare parameter clones before and after one step</td>
+            </tr>
+            <tr>
+              <td><span class="status todo">Todo</span></td>
+              <td>Smoke tests</td>
+              <td>Running a script or tiny training loop to catch integration failures.</td>
+              <td><code>pytest -q student/tests/test_ch05_training.py</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" id="milestones">
+        <h2>Milestones</h2>
+        <div class="three-grid">
+          <div class="mini">
+            <h3>Foundation</h3>
+            <ul class="checklist">
+              <li><span class="status progress">In Progress</span><span>Understand the LLM pipeline at a high level.</span></li>
+              <li><span class="status todo">Todo</span><span>Use tensors, modules, gradients, and dataloaders confidently.</span></li>
+              <li><span class="status todo">Todo</span><span>Write small pytest tests without copying examples.</span></li>
+            </ul>
+          </div>
+          <div class="mini">
+            <h3>Core Model</h3>
+            <ul class="checklist">
+              <li><span class="status todo">Todo</span><span>Build tokenization and dataset code.</span></li>
+              <li><span class="status todo">Todo</span><span>Build attention and causal masking.</span></li>
+              <li><span class="status todo">Todo</span><span>Build a tiny GPT and generation loop.</span></li>
+            </ul>
+          </div>
+          <div class="mini">
+            <h3>Training + Finetuning</h3>
+            <ul class="checklist">
+              <li><span class="status todo">Todo</span><span>Pretrain a tiny model for a few steps.</span></li>
+              <li><span class="status todo">Todo</span><span>Adapt GPT for classification.</span></li>
+              <li><span class="status todo">Todo</span><span>Format and train on instruction examples.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter" id="chapter-setup">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Setup + Appendix A</h2>
+              <span class="status progress">In Progress</span>
+            </div>
+            <p class="muted">Purpose: get comfortable with PyTorch and pytest before the LLM-specific code becomes dense.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/ch01/</span>
+            <span class="deliverable">student/tests/test_warmup.py</span>
+          </div>
+        </div>
+
+        <div class="two-grid">
+          <div>
+            <h3>Read</h3>
+            <ul class="plain-list">
+              <li><code>LLMs-from-scratch/setup/README.md</code></li>
+              <li><code>LLMs-from-scratch/appendix-A/README.md</code></li>
+              <li><code>LLMs-from-scratch/appendix-A/01_main-chapter-code/code-part1.ipynb</code></li>
+              <li><code>LLMs-from-scratch/appendix-A/01_main-chapter-code/code-part2.ipynb</code></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Build</h3>
+            <ul class="plain-list">
+              <li>Tensor normalization helper.</li>
+              <li>Simple accuracy function.</li>
+              <li>Tiny <code>torch.nn.Module</code>.</li>
+              <li>Tiny <code>Dataset</code> and <code>DataLoader</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Tests To Write</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Shape tests for tensor helpers.</span></li>
+            <li><span class="status todo">Todo</span><span>Dtype tests for labels and model outputs.</span></li>
+            <li><span class="status todo">Todo</span><span>Seeded test proving model initialization is repeatable.</span></li>
+            <li><span class="status todo">Todo</span><span>Gradient-flow test proving at least one parameter receives a gradient.</span></li>
+          </ul>
+        </div>
+
+        <div class="phase">
+          <h3>Checkpoint Questions</h3>
+          <ul class="plain-list">
+            <li>What is the difference between a tensor operation and a module?</li>
+            <li>What does <code>loss.backward()</code> populate?</li>
+            <li>Why do numerical tests often use tolerances?</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter" id="chapter-1">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Chapter 1: Understanding LLMs</h2>
+              <span class="status todo">Todo</span>
+            </div>
+            <p class="muted">Purpose: build the mental model for the whole book before writing real model code.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/ch01/pipeline_notes.md</span>
+            <span class="deliverable">student/ch01/toy_next_token.py</span>
+            <span class="deliverable">student/tests/test_ch01_pipeline.py</span>
+          </div>
+        </div>
+
+        <div class="two-grid">
+          <div>
+            <h3>Learning Goals</h3>
+            <ul class="plain-list">
+              <li>Explain next-token prediction.</li>
+              <li>Distinguish pretraining from finetuning.</li>
+              <li>Describe tokenizers, embeddings, transformers, logits, and sampling.</li>
+              <li>Understand the book's full path from data to instruction finetuning.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Build Tasks</h3>
+            <ul class="plain-list">
+              <li>Write the LLM pipeline in your own words.</li>
+              <li>Implement a toy vocabulary with plain Python dictionaries.</li>
+              <li>Implement input/target shifting for next-token prediction.</li>
+              <li>Implement a tiny deterministic next-token lookup baseline.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Tests To Write</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Vocabulary contains expected words and IDs.</span></li>
+            <li><span class="status todo">Todo</span><span>Unknown-token behavior is explicit.</span></li>
+            <li><span class="status todo">Todo</span><span>Input/target shifting produces expected pairs.</span></li>
+            <li><span class="status todo">Todo</span><span>Toy next-token lookup returns a stable answer for a known prefix.</span></li>
+          </ul>
+        </div>
+
+        <div class="phase">
+          <h3>Done Means</h3>
+          <p>You can explain <code>raw text -> tokens -> token IDs -> embeddings -> transformer -> logits -> probabilities -> sampled token</code> without reading notes.</p>
+        </div>
+      </section>
+
+      <section class="chapter" id="chapter-2">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Chapter 2: Working With Text Data</h2>
+              <span class="status todo">Todo</span>
+            </div>
+            <p class="muted">Purpose: transform raw text into training examples that a GPT model can consume.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/ch02/tokenizer.py</span>
+            <span class="deliverable">student/ch02/dataset.py</span>
+            <span class="deliverable">student/tests/test_ch02_*.py</span>
+          </div>
+        </div>
+
+        <div class="two-grid">
+          <div>
+            <h3>Read</h3>
+            <ul class="plain-list">
+              <li><code>ch02/01_main-chapter-code/ch02.ipynb</code></li>
+              <li><code>ch02/01_main-chapter-code/dataloader.ipynb</code></li>
+              <li><code>ch02/05_bpe-from-scratch/</code> as optional deeper tokenizer work.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Core Concepts</h3>
+            <ul class="plain-list">
+              <li>Tokenization and vocabulary construction.</li>
+              <li>Special tokens and unknown tokens.</li>
+              <li>Encode/decode round trips.</li>
+              <li>Sliding windows and input/target pairs.</li>
+              <li><code>Dataset</code> and <code>DataLoader</code> contracts.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Build Tasks</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Simple tokenizer with punctuation handling.</span></li>
+            <li><span class="status todo">Todo</span><span>Vocabulary builder with special tokens.</span></li>
+            <li><span class="status todo">Todo</span><span><code>encode</code> and <code>decode</code> functions.</span></li>
+            <li><span class="status todo">Todo</span><span>Chunking function for context windows.</span></li>
+            <li><span class="status todo">Todo</span><span>GPT-style dataset returning input and target tensors.</span></li>
+          </ul>
+        </div>
+
+        <div class="phase">
+          <h3>Tests To Write</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span><code>decode(encode(text))</code> behaves as expected for simple text.</span></li>
+            <li><span class="status todo">Todo</span><span>Special tokens are present and stable.</span></li>
+            <li><span class="status todo">Todo</span><span>Unknown words map to the intended ID.</span></li>
+            <li><span class="status todo">Todo</span><span>Dataset length is correct for given text, context length, and stride.</span></li>
+            <li><span class="status todo">Todo</span><span>Each item has shape <code>(context_length,)</code>.</span></li>
+            <li><span class="status todo">Todo</span><span>Target is input shifted by one token.</span></li>
+            <li><span class="status todo">Todo</span><span>Dataloader batch shape is <code>(batch_size, context_length)</code>.</span></li>
+            <li><span class="status todo">Todo</span><span>Short text fails clearly or returns zero examples by design.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter" id="chapter-3">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Chapter 3: Attention Mechanisms</h2>
+              <span class="status todo">Todo</span>
+            </div>
+            <p class="muted">Purpose: understand the core operation that lets tokens exchange contextual information.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/ch03/attention.py</span>
+            <span class="deliverable">student/tests/test_ch03_attention.py</span>
+          </div>
+        </div>
+
+        <div class="two-grid">
+          <div>
+            <h3>Core Concepts</h3>
+            <ul class="plain-list">
+              <li>Dot-product attention.</li>
+              <li>Queries, keys, values.</li>
+              <li>Attention scores and softmax.</li>
+              <li>Causal masking.</li>
+              <li>Dropout during training only.</li>
+              <li>Multi-head split and recombine.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Build Tasks</h3>
+            <ul class="plain-list">
+              <li>Simple attention without trainable weights.</li>
+              <li>Self-attention with trainable projections.</li>
+              <li>Causal self-attention.</li>
+              <li>Multi-head attention.</li>
+              <li>Small visualization or printed tensor-shape trace.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Tests To Write</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Output shape matches the expected batch, token, and embedding dimensions.</span></li>
+            <li><span class="status todo">Todo</span><span>Attention weights sum to 1 along the correct axis.</span></li>
+            <li><span class="status todo">Todo</span><span>Causal mask blocks attention to future tokens.</span></li>
+            <li><span class="status todo">Todo</span><span>Multi-head split/recombine preserves total embedding dimension.</span></li>
+            <li><span class="status todo">Todo</span><span>Dropout-disabled outputs are deterministic.</span></li>
+            <li><span class="status todo">Todo</span><span>A tiny manual attention calculation matches your implementation.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter" id="chapter-4">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Chapter 4: GPT Model From Scratch</h2>
+              <span class="status todo">Todo</span>
+            </div>
+            <p class="muted">Purpose: assemble embeddings, attention, normalization, feed-forward layers, and generation into a GPT-like model.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/ch04/gpt.py</span>
+            <span class="deliverable">student/ch04/generate.py</span>
+            <span class="deliverable">student/tests/test_ch04_*.py</span>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Build Tasks</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>LayerNorm.</span></li>
+            <li><span class="status todo">Todo</span><span>GELU activation.</span></li>
+            <li><span class="status todo">Todo</span><span>Feed-forward block.</span></li>
+            <li><span class="status todo">Todo</span><span>Transformer block with residual connections.</span></li>
+            <li><span class="status todo">Todo</span><span>GPT model with token and positional embeddings.</span></li>
+            <li><span class="status todo">Todo</span><span>Simple generation loop.</span></li>
+          </ul>
+        </div>
+
+        <div class="phase">
+          <h3>Tests To Write</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>LayerNorm output has near-zero mean and near-unit variance.</span></li>
+            <li><span class="status todo">Todo</span><span>GELU and feed-forward preserve required dimensions.</span></li>
+            <li><span class="status todo">Todo</span><span>Transformer block output shape equals input shape.</span></li>
+            <li><span class="status todo">Todo</span><span>GPT logits shape is <code>(batch, seq_len, vocab_size)</code>.</span></li>
+            <li><span class="status todo">Todo</span><span>Generation appends exactly <code>max_new_tokens</code>.</span></li>
+            <li><span class="status todo">Todo</span><span>Context-length overflow behavior is explicit.</span></li>
+            <li><span class="status todo">Todo</span><span>Parameter count matches a tiny known config.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter" id="chapter-5">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Chapter 5: Pretraining</h2>
+              <span class="status todo">Todo</span>
+            </div>
+            <p class="muted">Purpose: train the GPT model on unlabeled text and generate from it.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/ch05/train.py</span>
+            <span class="deliverable">student/ch05/sample.py</span>
+            <span class="deliverable">student/tests/test_ch05_*.py</span>
+          </div>
+        </div>
+
+        <div class="two-grid">
+          <div>
+            <h3>Read</h3>
+            <ul class="plain-list">
+              <li><code>ch05/01_main-chapter-code/ch05.ipynb</code></li>
+              <li><code>ch05/01_main-chapter-code/gpt_train.py</code></li>
+              <li><code>ch05/01_main-chapter-code/gpt_generate.py</code></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Core Concepts</h3>
+            <ul class="plain-list">
+              <li>Cross-entropy loss for next-token prediction.</li>
+              <li>Training vs validation loss.</li>
+              <li>Optimizer step lifecycle.</li>
+              <li>Evaluation mode and no-grad sections.</li>
+              <li>Greedy, temperature, and top-k sampling.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Tests To Write</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Loss function returns a scalar tensor.</span></li>
+            <li><span class="status todo">Todo</span><span>One training step updates at least one parameter.</span></li>
+            <li><span class="status todo">Todo</span><span>Evaluation does not update parameters.</span></li>
+            <li><span class="status todo">Todo</span><span>Train/eval mode switches are correct.</span></li>
+            <li><span class="status todo">Todo</span><span>Greedy generation is deterministic.</span></li>
+            <li><span class="status todo">Todo</span><span>Top-k sampling never samples outside the top-k candidates.</span></li>
+            <li><span class="status todo">Todo</span><span>Tiny model can overfit a tiny dataset enough to show loss decreases.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter" id="chapter-6">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Chapter 6: Classification Finetuning</h2>
+              <span class="status todo">Todo</span>
+            </div>
+            <p class="muted">Purpose: adapt a generative GPT backbone for supervised text classification.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/ch06/classification_dataset.py</span>
+            <span class="deliverable">student/ch06/classifier.py</span>
+            <span class="deliverable">student/tests/test_ch06_*.py</span>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Build Tasks</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Classification dataset for text-label rows.</span></li>
+            <li><span class="status todo">Todo</span><span>Padding and truncation logic.</span></li>
+            <li><span class="status todo">Todo</span><span>Classification head on top of a GPT representation.</span></li>
+            <li><span class="status todo">Todo</span><span>Accuracy function.</span></li>
+            <li><span class="status todo">Todo</span><span>Tiny finetuning loop.</span></li>
+          </ul>
+        </div>
+
+        <div class="phase">
+          <h3>Tests To Write</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Dataset returns <code>(input_ids, label)</code>.</span></li>
+            <li><span class="status todo">Todo</span><span>Padded examples have equal length.</span></li>
+            <li><span class="status todo">Todo</span><span>Labels use the expected dtype.</span></li>
+            <li><span class="status todo">Todo</span><span>Classifier logits shape is <code>(batch_size, num_classes)</code>.</span></li>
+            <li><span class="status todo">Todo</span><span>Accuracy is correct for known predictions.</span></li>
+            <li><span class="status todo">Todo</span><span>Frozen parameters do not change after one training step.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter" id="chapter-7">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Chapter 7: Instruction Finetuning</h2>
+              <span class="status todo">Todo</span>
+            </div>
+            <p class="muted">Purpose: format supervised instruction examples and train the model to produce responses.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/ch07/instruction_format.py</span>
+            <span class="deliverable">student/ch07/instruction_dataset.py</span>
+            <span class="deliverable">student/tests/test_ch07_*.py</span>
+          </div>
+        </div>
+
+        <div class="phase">
+          <h3>Build Tasks</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Instruction formatting function.</span></li>
+            <li><span class="status todo">Todo</span><span>Instruction dataset for instruction/input/output records.</span></li>
+            <li><span class="status todo">Todo</span><span>Padding and optional label masking.</span></li>
+            <li><span class="status todo">Todo</span><span>Response extraction helper.</span></li>
+            <li><span class="status todo">Todo</span><span>Tiny instruction finetuning loop.</span></li>
+          </ul>
+        </div>
+
+        <div class="phase">
+          <h3>Tests To Write</h3>
+          <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Prompt formatting exactly matches the intended template.</span></li>
+            <li><span class="status todo">Todo</span><span>Missing optional input field is handled correctly.</span></li>
+            <li><span class="status todo">Todo</span><span>Dataset returns correct token tensors.</span></li>
+            <li><span class="status todo">Todo</span><span>Padding and labels align correctly.</span></li>
+            <li><span class="status todo">Todo</span><span>Response extraction removes prompt text.</span></li>
+            <li><span class="status todo">Todo</span><span>Generation helper returns a string and respects max length.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="chapter" id="appendices">
+        <div class="chapter-head">
+          <div>
+            <div class="chapter-title">
+              <h2>Appendices D/E: Training Extras and LoRA</h2>
+              <span class="status todo">Todo</span>
+            </div>
+            <p class="muted">Purpose: add professional training-loop tools and parameter-efficient finetuning.</p>
+          </div>
+          <div>
+            <span class="deliverable">student/appendix_d/</span>
+            <span class="deliverable">student/appendix_e/</span>
+          </div>
+        </div>
+
+        <div class="two-grid">
+          <div>
+            <h3>Appendix D Tests</h3>
+            <ul class="plain-list">
+              <li>Learning rate scheduler changes LR as expected.</li>
+              <li>Checkpoint save/load preserves parameters.</li>
+              <li>Resume training starts from the expected state.</li>
+              <li>Early stopping triggers after patience is exceeded.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Appendix E Tests</h3>
+            <ul class="plain-list">
+              <li>Base model parameters are frozen.</li>
+              <li>LoRA parameters are trainable.</li>
+              <li>Output shape is unchanged.</li>
+              <li>Trainable parameter count is much smaller.</li>
+              <li>Merge/unmerge behavior is correct if implemented.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="repo">
+        <h2>Repo Structure</h2>
+        <p class="muted">Condensed map of this checkout. Main book code is under <code>LLMs-from-scratch/</code>; your work is under <code>student/</code>.</p>
+        <div class="repo-map">
+          <pre><code>./
+  study-plan.html
+  student/
+    README.md
+    ch01/
+    ch02/
+    ch03/
+    ch04/
+    ch05/
+    ch06/
+    ch07/
+    tests/
+  LLMs-from-scratch/
+    README.md
+    pyproject.toml
+    requirements.txt
+    conftest.py</code></pre>
+
+          <pre><code>LLMs-from-scratch/setup/
+  README.md
+  01_optional-python-setup-preferences/
+  02_installing-python-libraries/
+    python_environment_check.py
+    tests.py
+  03_optional-docker-environment/
+  04_optional-aws-sagemaker-notebook/</code></pre>
+
+          <pre><code>LLMs-from-scratch/ch01/
+  README.md
+
+LLMs-from-scratch/ch02/
+  01_main-chapter-code/
+    ch02.ipynb
+    dataloader.ipynb
+    exercise-solutions.ipynb
+  02_bonus_bytepair-encoder/
+  03_bonus_embedding-vs-matmul/
+  04_bonus_dataloader-intuition/
+  05_bpe-from-scratch/
+    tests.py</code></pre>
+
+          <pre><code>LLMs-from-scratch/ch03/
+  01_main-chapter-code/
+    ch03.ipynb
+    multihead-attention.ipynb
+    exercise-solutions.ipynb
+  02_bonus_efficient-multihead-attention/
+  03_understanding-buffers/</code></pre>
+
+          <pre><code>LLMs-from-scratch/ch04/
+  01_main-chapter-code/
+    ch04.ipynb
+    gpt.py
+    previous_chapters.py
+    tests.py
+  02_performance-analysis/
+  03_kv-cache/
+  04_gqa/
+  05_mla/
+  06_swa/
+  07_moe/
+  08_deltanet/
+  09_dsa/
+  10_kv-sharing/</code></pre>
+
+          <pre><code>LLMs-from-scratch/ch05/
+  01_main-chapter-code/
+    ch05.ipynb
+    gpt_train.py
+    gpt_generate.py
+    gpt_download.py
+    previous_chapters.py
+    tests.py
+  02_alternative_weight_loading/
+  03_bonus_pretraining_on_gutenberg/
+  04_learning_rate_schedulers/
+  05_bonus_hparam_tuning/
+  06_user_interface/
+  07_gpt_to_llama/
+  08_memory_efficient_weight_loading/
+  09_extending-tokenizers/
+  10_llm-training-speed/
+  11_qwen3/
+  12_gemma3/
+  13_olmo3/
+  14_ch05_with_other_llms/
+  15_tiny-aya/
+  16_qwen3.5/
+  17_gemma4/
+  18_muon/</code></pre>
+
+          <pre><code>LLMs-from-scratch/ch06/
+  01_main-chapter-code/
+    ch06.ipynb
+    gpt_class_finetune.py
+    gpt_download.py
+    previous_chapters.py
+    tests.py
+  02_bonus_additional-experiments/
+  03_bonus_imdb-classification/
+  04_user_interface/</code></pre>
+
+          <pre><code>LLMs-from-scratch/ch07/
+  01_main-chapter-code/
+    ch07.ipynb
+    gpt_instruction_finetuning.py
+    ollama_evaluate.py
+    previous_chapters.py
+    tests.py
+  02_dataset-utilities/
+  03_model-evaluation/
+  04_preference-tuning-with-dpo/
+  05_dataset-generation/
+  06_user_interface/</code></pre>
+
+          <pre><code>LLMs-from-scratch/appendix-A/
+  01_main-chapter-code/
+  02_setup-recommendations/
+
+LLMs-from-scratch/appendix-B/
+LLMs-from-scratch/appendix-C/
+
+LLMs-from-scratch/appendix-D/
+  01_main-chapter-code/
+
+LLMs-from-scratch/appendix-E/
+  01_main-chapter-code/</code></pre>
+
+          <pre><code>LLMs-from-scratch/pkg/
+  llms_from_scratch/
+    appendix_a.py
+    appendix_d.py
+    appendix_e.py
+    ch02.py
+    ch03.py
+    ch04.py
+    ch05.py
+    ch06.py
+    ch07.py
+    generate.py
+    llama3.py
+    qwen3.py
+    utils.py
+    kv_cache/
+    kv_cache_batched/
+    tests/</code></pre>
+        </div>
+      </section>
+
+      <section class="card" id="commands">
+        <h2>Commands</h2>
+        <div class="two-grid">
+          <div>
+            <h3>From Workspace Root</h3>
+            <pre><code>pytest student/tests
+pytest student/tests -q
+pytest student/tests -k tokenizer</code></pre>
+          </div>
+          <div>
+            <h3>From Official Repo</h3>
+            <pre><code>cd LLMs-from-scratch
+pytest
+pytest ch04/01_main-chapter-code/tests.py
+pytest ch05/01_main-chapter-code/tests.py</code></pre>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
