@@ -529,7 +529,7 @@ student/tests/test_ch03_attention.py</code></pre>
           <div>
             <div class="chapter-title">
               <h2>Setup + Appendix A</h2>
-              <span class="status progress">In Progress</span>
+              <span class="status done">Done</span>
             </div>
             <p class="muted">Purpose: get comfortable with PyTorch and pytest before the LLM-specific code becomes dense.</p>
           </div>
@@ -563,10 +563,10 @@ student/tests/test_ch03_attention.py</code></pre>
         <div class="phase">
           <h3>Tests To Write</h3>
           <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Shape tests for tensor helpers.</span></li>
-            <li><span class="status todo">Todo</span><span>Dtype tests for labels and model outputs.</span></li>
-            <li><span class="status todo">Todo</span><span>Seeded test proving model initialization is repeatable.</span></li>
-            <li><span class="status todo">Todo</span><span>Gradient-flow test proving at least one parameter receives a gradient.</span></li>
+            <li><span class="status done">Done</span><span>Shape tests for tensor helpers.</span></li>
+            <li><span class="status done">Done</span><span>Dtype tests for labels and model outputs.</span></li>
+            <li><span class="status done">Done</span><span>Seeded test proving model initialization is repeatable.</span></li>
+            <li><span class="status done">Done</span><span>Gradient-flow test proving at least one parameter receives a gradient.</span></li>
           </ul>
         </div>
 
@@ -585,14 +585,12 @@ student/tests/test_ch03_attention.py</code></pre>
           <div>
             <div class="chapter-title">
               <h2>Chapter 1: Understanding LLMs</h2>
-              <span class="status todo">Todo</span>
+              <span class="status done">Done</span>
             </div>
             <p class="muted">Purpose: build the mental model for the whole book before writing real model code.</p>
           </div>
           <div>
             <span class="deliverable">student/ch01/pipeline_notes.md</span>
-            <span class="deliverable">student/ch01/toy_next_token.py</span>
-            <span class="deliverable">student/tests/test_ch01_pipeline.py</span>
           </div>
         </div>
 
@@ -610,20 +608,19 @@ student/tests/test_ch03_attention.py</code></pre>
             <h3>Build Tasks</h3>
             <ul class="plain-list">
               <li>Write the LLM pipeline in your own words.</li>
-              <li>Implement a toy vocabulary with plain Python dictionaries.</li>
-              <li>Implement input/target shifting for next-token prediction.</li>
-              <li>Implement a tiny deterministic next-token lookup baseline.</li>
+              <li>Explain the difference between training and generation.</li>
+              <li>Explain input/target shifting for next-token prediction.</li>
+              <li>Explain how pretraining differs from finetuning.</li>
             </ul>
           </div>
         </div>
 
         <div class="phase">
-          <h3>Tests To Write</h3>
+          <h3>Checkpoint Questions</h3>
           <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Vocabulary contains expected words and IDs.</span></li>
-            <li><span class="status todo">Todo</span><span>Unknown-token behavior is explicit.</span></li>
-            <li><span class="status todo">Todo</span><span>Input/target shifting produces expected pairs.</span></li>
-            <li><span class="status todo">Todo</span><span>Toy next-token lookup returns a stable answer for a known prefix.</span></li>
+            <li><span class="status done">Done</span><span>Explain <code>raw text -> tokens -> token IDs -> embeddings -> transformer -> logits -> probabilities -> sampled token</code>.</span></li>
+            <li><span class="status done">Done</span><span>Given token IDs, identify the shifted input and target IDs.</span></li>
+            <li><span class="status done">Done</span><span>Describe the generation loop without confusing it with training.</span></li>
           </ul>
         </div>
 
@@ -684,12 +681,13 @@ student/tests/test_ch03_attention.py</code></pre>
         <div class="phase">
           <h3>Tests To Write</h3>
           <ul class="checklist">
+            <li><span class="status todo">Todo</span><span>Vocabulary contains expected words and IDs.</span></li>
             <li><span class="status todo">Todo</span><span><code>decode(encode(text))</code> behaves as expected for simple text.</span></li>
             <li><span class="status todo">Todo</span><span>Special tokens are present and stable.</span></li>
-            <li><span class="status todo">Todo</span><span>Unknown words map to the intended ID.</span></li>
+            <li><span class="status todo">Todo</span><span>Unknown-token behavior is explicit.</span></li>
             <li><span class="status todo">Todo</span><span>Dataset length is correct for given text, context length, and stride.</span></li>
             <li><span class="status todo">Todo</span><span>Each item has shape <code>(context_length,)</code>.</span></li>
-            <li><span class="status todo">Todo</span><span>Target is input shifted by one token.</span></li>
+            <li><span class="status todo">Todo</span><span>Input/target shifting produces expected pairs.</span></li>
             <li><span class="status todo">Todo</span><span>Dataloader batch shape is <code>(batch_size, context_length)</code>.</span></li>
             <li><span class="status todo">Todo</span><span>Short text fails clearly or returns zero examples by design.</span></li>
           </ul>
