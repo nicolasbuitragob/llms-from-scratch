@@ -17,7 +17,7 @@ class SimpleTokenizerV1:
     """Placeholder for your Chapter 2 tokenizer implementation."""
     def __init__(self, text:str):
         self.text:str = text
-        self.regex_pattern: str = r"([,.]|\s+)"  # Regex pattern to split on punctuation and whitespace
+        self.regex_pattern: str = r"([,.!?:;]|\s+)"  # Regex pattern to split on punctuation and whitespace
         self.unk_token: str = '<|unk|>'
         self.end_of_text_token: str = '<|endoftext|>'
         self.vocab: dict[str,int] = self.build_vocab()
@@ -58,11 +58,15 @@ class SimpleTokenizerV1:
         for token in tokens:
             if token in id_to_word:
                 decoded.append(id_to_word[token])
+            else:
+                raise ValueError(f"Invalid token ID: {token}")  # Raise an error for invalid token IDs
         decoded: str = ' '.join(decoded)  # Join the tokens back into a single string 
         #remove end-of-text token from the decoded string
         decoded = decoded.replace(self.end_of_text_token, '').strip()
+        
         #remove spaces before punctuation
-        decoded = re.sub(r'\s+([,.])', r'\1', decoded)
+        decoded = re.sub(r'\s+([,.!?:;])', r'\1', decoded)
+
 
         return decoded
     
