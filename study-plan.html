@@ -3,995 +3,461 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LLMs From Scratch Tutor Plan</title>
+  <title>LLMs From Scratch</title>
   <style>
     :root {
-      --bg: #f5f6f8;
-      --paper: #ffffff;
-      --ink: #17202a;
-      --muted: #607083;
-      --line: #d8dee8;
-      --soft: #eef2f7;
-      --accent: #1f5fbf;
-      --todo: #697386;
-      --progress: #a16207;
-      --done: #147a3d;
-      --risk: #b42318;
+      --bg: #f4f1ea;
+      --paper: #fffdf8;
+      --ink: #1b1f1d;
+      --muted: #66706b;
+      --line: #dcd6c8;
+      --soft: #ece7dc;
+      --accent: #1d6b55;
+      --accent-soft: #d9ebe3;
+      --now: #b4531c;
+      --now-soft: #f8e4d6;
+      --todo: #8a918d;
+      --code-bg: #ece7dc;
+      --dark-panel: #18302a;
+      --dark-panel-ink: #d7e8e0;
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
     }
 
-    * {
-      box-sizing: border-box;
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #131614;
+        --paper: #1b1f1d;
+        --ink: #e7ebe8;
+        --muted: #9aa49f;
+        --line: #2f3632;
+        --soft: #232825;
+        --accent: #5cc19f;
+        --accent-soft: #1f3a31;
+        --now: #f0955a;
+        --now-soft: #3d2618;
+        --todo: #6f7873;
+        --code-bg: #262c29;
+        --dark-panel: #0f231d;
+        --dark-panel-ink: #c9ddd4;
+      }
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
     body {
       margin: 0;
       background: var(--bg);
       color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.55;
+      font: 16px/1.55 var(--sans);
     }
 
-    header {
-      background: #111827;
-      color: #fff;
-      padding: 38px 24px 30px;
-    }
-
-    header .wrap,
-    main {
-      max-width: 1240px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(2.1rem, 4.5vw, 4.4rem);
-      line-height: 1;
-      letter-spacing: 0;
-    }
-
-    h2 {
-      margin: 0 0 14px;
-      font-size: 1.35rem;
-    }
-
-    h3 {
-      margin: 0 0 10px;
-      font-size: 1.04rem;
-    }
-
-    h4 {
-      margin: 16px 0 6px;
-      font-size: 0.95rem;
-    }
-
-    p {
-      margin: 0 0 12px;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    code,
-    pre {
-      background: var(--soft);
-      border-radius: 6px;
-      font-family: "SFMono-Regular", Consolas, monospace;
-      font-size: 0.9em;
-    }
-
+    h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: -0.01em; }
+    h2 { font-size: 1.7rem; margin: 0 0 6px; }
+    h3 { font-size: 1.1rem; margin: 0 0 8px; }
+    p { margin: 0 0 10px; }
+    a { color: var(--accent); }
     code {
-      padding: 2px 5px;
+      font: 0.86em var(--mono);
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 4px;
+      overflow-wrap: anywhere;
     }
+    pre { margin: 0; overflow-x: auto; }
+    pre code { display: block; padding: 14px; line-height: 1.5; background: var(--code-bg); border-radius: 8px; }
+    :focus-visible { outline: 2px solid var(--now); outline-offset: 2px; }
 
-    pre {
-      overflow-x: auto;
-      padding: 14px;
-      margin: 10px 0 0;
-      line-height: 1.45;
-    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+    .eyebrow { font: 700 0.72rem/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .muted { color: var(--muted); }
 
-    main {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 22px;
-      padding: 24px;
-    }
-
-    nav {
-      position: sticky;
-      top: 18px;
-      align-self: start;
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
-    }
-
-    nav a {
-      display: block;
-      padding: 6px 0;
-      color: #243244;
-      font-weight: 600;
-    }
-
-    .content {
-      display: grid;
-      gap: 18px;
-    }
-
-    .card,
-    .chapter {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
-      box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .summary-grid,
-    .three-grid,
-    .two-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .summary-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .three-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .two-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .mini {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 14px;
-      background: #fbfcfe;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border: 1px solid currentColor;
-      border-radius: 999px;
-      padding: 3px 9px;
-      font-size: 0.76rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .status::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-
-    .todo {
-      color: var(--todo);
-    }
-
-    .progress {
-      color: var(--progress);
-    }
-
-    .done {
-      color: var(--done);
-    }
-
-    .risk {
-      color: var(--risk);
-    }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .chapter-head {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
-      align-items: start;
+    /* Top bar */
+    .topbar {
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line);
-      padding-bottom: 14px;
-      margin-bottom: 16px;
     }
+    .topbar .wrap { display: flex; align-items: center; gap: 18px; height: 52px; }
+    .brand { font: 600 1.05rem var(--serif); white-space: nowrap; }
+    .topnav { display: flex; gap: 16px; overflow-x: auto; font-size: 0.9rem; }
+    .topnav a { color: var(--muted); text-decoration: none; white-space: nowrap; }
+    .topnav a:hover { color: var(--ink); }
+    .meter { margin-left: auto; display: flex; align-items: center; gap: 10px; font: 0.8rem var(--mono); color: var(--muted); white-space: nowrap; }
+    .meter-bar { width: 120px; height: 6px; border-radius: 3px; background: var(--soft); overflow: hidden; }
+    .meter-bar span { display: block; height: 100%; background: var(--accent); }
 
-    .chapter-title {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .chapter-title h2 {
-      margin: 0;
-    }
-
-    .phase {
-      border-left: 4px solid var(--accent);
-      padding-left: 12px;
-      margin-top: 14px;
-    }
-
-    .checklist,
-    .plain-list {
-      margin: 8px 0 0;
-      padding-left: 0;
-      list-style: none;
-    }
-
-    .checklist li {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 8px;
-      margin: 6px 0;
-      align-items: start;
-    }
-
-    .plain-list {
-      list-style: disc;
-      padding-left: 20px;
-    }
-
-    .plain-list li {
-      margin: 5px 0;
-    }
-
-    .deliverable {
-      display: inline-block;
-      margin: 3px 4px 3px 0;
-      padding: 4px 8px;
-      border-radius: 6px;
-      background: var(--soft);
-      font-family: "SFMono-Regular", Consolas, monospace;
-      font-size: 0.83rem;
-      color: #263445;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th,
-    td {
+    /* Hero */
+    .hero { padding: 48px 0 28px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; align-items: end; }
+    .hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1; margin: 10px 0 14px; }
+    .hero p { max-width: 560px; font-size: 1.05rem; color: var(--muted); }
+    .now-card {
+      background: var(--paper);
       border: 1px solid var(--line);
-      padding: 9px 10px;
+      border-left: 5px solid var(--now);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .now-card .eyebrow { color: var(--now); }
+    .now-card h3 { font-size: 1.35rem; margin: 8px 0 4px; }
+    .now-card dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 12px 0 0; font-size: 0.9rem; }
+    .now-card dt { color: var(--muted); }
+    .now-card dd { margin: 0; }
+
+    /* Section frame */
+    section.block { padding: 36px 0; border-top: 1px solid var(--line); scroll-margin-top: 60px; }
+    .block-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+
+    /* Build path */
+    .path { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 0; position: relative; }
+    .stage {
+      position: relative;
+      display: flex; flex-direction: column; gap: 6px;
+      padding: 14px 12px 12px;
+      margin-right: 18px;
       text-align: left;
-      vertical-align: top;
+      font: inherit; color: inherit;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      cursor: pointer;
+      min-height: 138px;
     }
+    .stage:last-child { margin-right: 0; }
+    .stage:not(:last-child)::after {
+      content: "→";
+      position: absolute; right: -16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted); font-weight: 700;
+    }
+    .stage:hover { border-color: var(--accent); }
+    .stage[aria-current="true"] { box-shadow: 0 0 0 2px var(--accent); }
+    .stage .tag { font: 700 0.7rem var(--mono); color: var(--muted); }
+    .stage .name { font: 600 0.98rem/1.2 var(--serif); }
+    .stage .shape { font: 0.74rem var(--mono); color: var(--muted); margin-top: auto; }
+    .stage .mini { height: 4px; background: var(--soft); border-radius: 2px; overflow: hidden; }
+    .stage .mini span { display: block; height: 100%; background: var(--accent); }
+    .stage.done { background: var(--accent-soft); border-color: transparent; }
+    .stage.progress { border-color: var(--now); background: var(--now-soft); }
+    .stage.progress .tag { color: var(--now); }
+    .stage.progress .mini span { background: var(--now); }
+    .path-legend { display: flex; gap: 16px; margin-top: 14px; font-size: 0.82rem; color: var(--muted); flex-wrap: wrap; }
 
-    th {
-      background: var(--soft);
+    /* Status pills and dots */
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 2px 9px; border-radius: 999px;
+      font: 700 0.7rem/1.6 var(--mono); text-transform: uppercase; letter-spacing: 0.05em;
+      border: 1px solid currentColor; white-space: nowrap;
     }
+    .pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .pill.done { color: var(--accent); }
+    .pill.progress { color: var(--now); }
+    .pill.todo { color: var(--todo); }
 
-    .repo-map {
-      columns: 2;
-      column-gap: 20px;
+    /* Chapter tabs */
+    .tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 18px; }
+    .tab {
+      font: 600 0.85rem var(--sans); color: var(--muted);
+      background: transparent; border: 1px solid var(--line); border-radius: 999px;
+      padding: 6px 14px; cursor: pointer; white-space: nowrap;
     }
+    .tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .tab.progress:not([aria-selected="true"]) { border-color: var(--now); color: var(--now); }
 
-    .repo-map pre {
-      break-inside: avoid;
-      margin-bottom: 16px;
-    }
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    .panel-head { padding: 24px 24px 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: start; }
+    .panel-num { font: 600 3.2rem/0.9 var(--serif); color: var(--accent); min-width: 1.6ch; }
+    .panel-head h2 { margin-bottom: 4px; }
 
-    .callout {
-      border-left: 4px solid var(--progress);
-      padding: 10px 12px;
-      background: #fffbeb;
-      border-radius: 0 8px 8px 0;
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 14px 24px; background: var(--dark-panel); color: var(--dark-panel-ink); }
+    .flow .node { font: 0.8rem var(--mono); padding: 5px 9px; border: 1px solid color-mix(in srgb, var(--dark-panel-ink) 30%, transparent); border-radius: 6px; }
+    .flow .arrow { opacity: 0.6; }
+
+    .panel-body { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+    .panel-main { padding: 22px 24px; border-right: 1px solid var(--line); }
+    .panel-side { padding: 22px 24px; display: flex; flex-direction: column; gap: 22px; background: color-mix(in srgb, var(--soft) 45%, var(--paper)); }
+
+    /* Exercise rail */
+    .rail { list-style: none; margin: 0; padding: 0; position: relative; }
+    .rail::before { content: ""; position: absolute; left: 11px; top: 14px; bottom: 14px; width: 2px; background: var(--line); }
+    .ex { position: relative; padding-left: 36px; margin-bottom: 10px; }
+    .ex .dot {
+      position: absolute; left: 4px; top: 13px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--paper); border: 2px solid var(--todo);
     }
+    .ex.done .dot { background: var(--accent); border-color: var(--accent); }
+    .ex.progress .dot { background: var(--now); border-color: var(--now); box-shadow: 0 0 0 4px var(--now-soft); }
+    .ex details { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+    .ex.progress details { border-color: var(--now); }
+    .ex summary { list-style: none; cursor: pointer; padding: 10px 14px; display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+    .ex summary::-webkit-details-marker { display: none; }
+    .ex summary .sec { font: 0.72rem var(--mono); color: var(--muted); display: block; }
+    .ex summary .ttl { font-weight: 650; }
+    .ex .ex-body { padding: 0 14px 14px; font-size: 0.93rem; }
+    .ex .ex-body h4 { font: 700 0.7rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; }
+    .ex .ex-body ul { margin: 0; padding-left: 18px; }
+    .ex .ex-body li { margin: 3px 0; }
+    .files { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .side-block h4 { font: 700 0.7rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+    .side-block ol, .side-block ul { margin: 0; padding-left: 20px; font-size: 0.92rem; }
+    .side-block li { margin: 4px 0; }
+    .gate { border-left: 4px solid var(--accent); padding: 10px 12px; background: var(--accent-soft); border-radius: 0 8px 8px 0; font-size: 0.92rem; }
+    .cmd { display: block; font: 0.84rem var(--mono); padding: 10px 12px; border-radius: 8px; background: var(--dark-panel); color: var(--dark-panel-ink); }
+
+    /* Method */
+    .loop { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; counter-reset: step; }
+    .loop li {
+      list-style: none; counter-increment: step;
+      background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
+      padding: 12px; font-size: 0.88rem;
+    }
+    .loop li::before { content: counter(step, decimal-leading-zero); display: block; font: 700 0.75rem var(--mono); color: var(--accent); margin-bottom: 6px; }
+    .loop li b { display: block; font-family: var(--serif); font-size: 1rem; margin-bottom: 2px; }
+    .loop { padding: 0; margin: 0 0 22px; }
+
+    .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+    .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+
+    .ladder { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+    .ladder li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: center; font-size: 0.92rem; }
+    .ladder li span { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 700 0.75rem var(--mono); background: var(--soft); }
+    .ladder li:last-child span { background: var(--now-soft); color: var(--now); }
+
+    .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.92rem; }
+    .roles ul { margin: 0; padding-left: 18px; }
+
+    /* Reference */
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font: 700 0.7rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    details.ref { margin-top: 18px; }
+    details.ref > summary { cursor: pointer; font-weight: 650; padding: 8px 0; }
+    .repo-map { columns: 3 260px; column-gap: 16px; }
+    .repo-map pre { break-inside: avoid; margin-bottom: 14px; }
+
+    footer { padding: 28px 0 48px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); }
 
     @media (max-width: 980px) {
-      main {
-        grid-template-columns: 1fr;
-      }
+      .hero { grid-template-columns: 1fr; }
+      .path { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 14px; }
+      .stage:nth-child(3n)::after { content: none; }
+      .stage:nth-child(3n) { margin-right: 0; }
+      .panel-body { grid-template-columns: 1fr; }
+      .panel-main { border-right: 0; border-bottom: 1px solid var(--line); }
+      .loop { grid-template-columns: repeat(4, 1fr); }
+      .meter-bar { display: none; }
+    }
 
-      nav {
-        position: static;
-      }
+    @media (max-width: 640px) {
+      .topnav { display: none; }
+      .path { grid-template-columns: 1fr; row-gap: 0; }
+      .stage { margin: 0 0 22px; min-height: 0; }
+      .stage:not(:last-child)::after { content: "↓"; right: auto; left: 50%; top: auto; bottom: -21px; transform: translateX(-50%); }
+      .panel-head { grid-template-columns: 1fr; gap: 8px; padding: 18px 16px 14px; }
+      .panel-num { font-size: 2.2rem; }
+      .panel-main, .panel-side, .flow { padding-left: 16px; padding-right: 16px; }
+      .hero, .loop, .two, .roles, .panel-body { grid-template-columns: minmax(0, 1fr); }
+      .hero h1 { font-size: 2.3rem; }
+      .meter { font-size: 0.72rem; }
+    }
 
-      .summary-grid,
-      .three-grid,
-      .two-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .chapter-head {
-        grid-template-columns: 1fr;
-      }
-
-      .repo-map {
-        columns: 1;
-      }
+    @media print {
+      body { background: #fff; }
+      .topbar, .tabs { display: none; }
+      .panel[hidden] { display: block; }
+      .panel { margin-bottom: 18px; break-inside: avoid-page; }
+      .ex details:not([open]) > .ex-body { display: block; }
+      section.block { break-inside: avoid-page; }
     }
   </style>
 </head>
 <body>
-  <header>
+  <header class="topbar">
     <div class="wrap">
-      <h1>LLMs From Scratch Tutor Plan</h1>
-      <p>Build the book concepts yourself, then prove them with pytest. The official repo remains reference material; your implementations live in <code>student/</code>.</p>
-      <div class="legend">
-        <span class="status todo">Todo</span>
-        <span class="status progress">In Progress</span>
-        <span class="status done">Done</span>
-        <span class="status risk">Needs Review</span>
+      <span class="brand">LLMs From Scratch</span>
+      <nav class="topnav" aria-label="Page sections">
+        <a href="#path">Build path</a>
+        <a href="#chapters">Chapters</a>
+        <a href="#method">Method</a>
+        <a href="#reference">Reference</a>
+      </nav>
+      <div class="meter" aria-label="Overall progress">
+        <div class="meter-bar"><span id="meter-fill"></span></div>
+        <span id="meter-text"></span>
       </div>
     </div>
   </header>
 
-  <main>
-    <nav aria-label="Page sections">
-      <h3>Navigation</h3>
-      <a href="#operating-model">Operating Model</a>
-      <a href="#workspace">Workspace</a>
-      <a href="#pytest">Pytest Curriculum</a>
-      <a href="#milestones">Milestones</a>
-      <a href="#chapter-setup">Setup + Appendix A</a>
-      <a href="#chapter-1">Chapter 1</a>
-      <a href="#chapter-2">Chapter 2</a>
-      <a href="#chapter-3">Chapter 3</a>
-      <a href="#chapter-4">Chapter 4</a>
-      <a href="#chapter-5">Chapter 5</a>
-      <a href="#chapter-6">Chapter 6</a>
-      <a href="#chapter-7">Chapter 7</a>
-      <a href="#appendices">Appendices D/E</a>
-      <a href="#repo">Repo Structure</a>
-      <a href="#commands">Commands</a>
-    </nav>
+  <main class="wrap">
+    <div class="hero">
+      <div>
+        <span class="eyebrow">Tutor-led study plan</span>
+        <h1>Build a GPT, one tested piece at a time.</h1>
+        <p>You write the code in <code>student/</code> and prove it with pytest. The tutor gives hints, questions, and reviews. The book repo in <code>LLMs-from-scratch/</code> is reference only.</p>
+      </div>
+      <aside class="now-card" id="now-card" aria-label="Current exercise"></aside>
+    </div>
 
-    <div class="content">
-      <section class="card" id="operating-model">
-        <h2>Operating Model</h2>
-        <div class="summary-grid">
-          <div class="mini">
-            <h3>Role Split</h3>
-            <p>You implement and test. I review, question, guide, and explain failures.</p>
-          </div>
-          <div class="mini">
-            <h3>Default Hint Policy</h3>
-            <p>Hints first. Full solutions only when you explicitly ask for them.</p>
-          </div>
-          <div class="mini">
-            <h3>Study Unit</h3>
-            <p>Read one section, summarize it, build a minimal version, test it, then compare.</p>
-          </div>
-          <div class="mini">
-            <h3>Quality Bar</h3>
-            <p>A topic is done when tests prove the core behavior and you can explain the tensor flow.</p>
-          </div>
+    <section class="block" id="path">
+      <div class="block-head">
+        <div>
+          <span class="eyebrow">Overview</span>
+          <h2>The build path</h2>
+          <p class="muted">Each stage makes one part of the model. The output of one stage is the input of the next. Select a stage to open its chapter.</p>
         </div>
+      </div>
+      <div class="path" id="path-map"></div>
+      <div class="path-legend">
+        <span class="pill done">Done</span>
+        <span class="pill progress">In progress</span>
+        <span class="pill todo">Todo</span>
+        <span>Shape = tensor that the stage outputs · B batch · T tokens · D embedding · V vocabulary · C classes</span>
+      </div>
+    </section>
 
-        <div class="phase">
-          <h3>Per-Topic Loop</h3>
-          <ol>
-            <li>Read the relevant book section and repo notebook.</li>
-            <li>Write a short summary in your own words.</li>
-            <li>Answer checkpoint questions without looking at the code.</li>
-            <li>Implement a small, direct version in <code>student/</code>.</li>
-            <li>Write pytest tests before or alongside the implementation.</li>
-            <li>Run tests, inspect failures, fix the implementation, and review edge cases.</li>
-            <li>Compare against the official code only after your version works.</li>
+    <section class="block" id="chapters">
+      <div class="block-head">
+        <div>
+          <span class="eyebrow">Chapters</span>
+          <h2>Exercises, tests, and gates</h2>
+        </div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Chapters" id="tabs"></div>
+      <div id="panels"></div>
+    </section>
+
+    <section class="block" id="method">
+      <div class="block-head">
+        <div>
+          <span class="eyebrow">Method</span>
+          <h2>How every topic runs</h2>
+        </div>
+      </div>
+
+      <ol class="loop">
+        <li><b>Read</b>Only the named book section.</li>
+        <li><b>Explain</b>Input, output, and invariant in your words.</li>
+        <li><b>Answer</b>Checkpoint questions without code.</li>
+        <li><b>Predict</b>Expected value, shape, and dtype.</li>
+        <li><b>Test</b>Write or enable one focused pytest test.</li>
+        <li><b>Build</b>Smallest code that makes it pass.</li>
+        <li><b>Compare</b>Official code, only after yours works.</li>
+      </ol>
+
+      <div class="two">
+        <div class="card">
+          <h3>When you are blocked</h3>
+          <p class="muted">Give the failing test, the actual result, the expected result, and your explanation. Then climb the ladder one step at a time.</p>
+          <ol class="ladder">
+            <li><span>1</span>Clarify the expected behavior</li>
+            <li><span>2</span>Targeted question from the tutor</li>
+            <li><span>3</span>Next small step</li>
+            <li><span>4</span>Tiny isolated example</li>
+            <li><span>5</span>Full solution — only when you ask</li>
           </ol>
         </div>
-      </section>
-
-      <section class="card" id="workspace">
-        <h2>Workspace Contract</h2>
-        <div class="two-grid">
-          <div>
-            <h3>Your Files</h3>
-            <pre><code>student/
-  README.md
-  ch01/
-  ch02/
-  ch03/
-  ch04/
-  ch05/
-  ch06/
-  ch07/
-  tests/</code></pre>
+        <div class="card">
+          <h3>Role split</h3>
+          <div class="roles">
+            <div>
+              <h4 class="eyebrow">You</h4>
+              <ul>
+                <li>Implement</li>
+                <li>Write tests</li>
+                <li>Explain the tensor flow</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="eyebrow">Tutor</h4>
+              <ul>
+                <li>Explain concepts</li>
+                <li>Ask checkpoint questions</li>
+                <li>Review code and failures</li>
+                <li>Help design tests</li>
+              </ul>
+            </div>
           </div>
-          <div>
-            <h3>Recommended Naming</h3>
-            <pre><code>student/ch02/tokenizer.py
-student/ch02/dataset.py
-student/tests/test_ch02_tokenizer.py
-student/tests/test_ch02_dataset.py
-
-student/ch03/attention.py
-student/tests/test_ch03_attention.py</code></pre>
-          </div>
+          <h4 class="eyebrow" style="margin-top:16px">A topic is done when</h4>
+          <ul style="margin:0;padding-left:18px;font-size:.92rem">
+            <li>You explain it without the book.</li>
+            <li>It works on small examples.</li>
+            <li>Tests cover core behavior, shapes, and dtypes.</li>
+            <li>Edge cases have intentional behavior.</li>
+          </ul>
         </div>
-        <p class="callout">Keep the official files in <code>LLMs-from-scratch/</code> unchanged unless you are intentionally experimenting. Your goal is to rebuild, not to patch the book code.</p>
-      </section>
+      </div>
+    </section>
 
-      <section class="card" id="pytest">
-        <h2>Pytest Curriculum</h2>
+    <section class="block" id="reference">
+      <div class="block-head">
+        <div>
+          <span class="eyebrow">Reference</span>
+          <h2>Pytest toolkit, workspace, commands</h2>
+        </div>
+      </div>
+
+      <div class="card">
         <table>
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Skill</th>
-              <th>Use It When</th>
-              <th>Example Target</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Pytest skill</th><th>Use it when</th><th>Example</th><th>First needed</th></tr></thead>
           <tbody>
-            <tr>
-              <td><span class="status todo">Todo</span></td>
-              <td>Basic assertions</td>
-              <td>Checking exact values, lengths, types, and simple behavior.</td>
-              <td><code>assert vocab["hello"] == 0</code></td>
-            </tr>
-            <tr>
-              <td><span class="status todo">Todo</span></td>
-              <td>Fixtures</td>
-              <td>Reusing tiny vocabularies, configs, toy datasets, and seeded models.</td>
-              <td><code>tiny_gpt_config</code></td>
-            </tr>
-            <tr>
-              <td><span class="status todo">Todo</span></td>
-              <td>Parametrization</td>
-              <td>Testing many edge cases without repeating test functions.</td>
-              <td>empty text, short text, unknown token</td>
-            </tr>
-            <tr>
-              <td><span class="status todo">Todo</span></td>
-              <td>Numerical tolerances</td>
-              <td>Testing tensors where exact floating-point equality is wrong.</td>
-              <td><code>torch.allclose(actual, expected, atol=1e-5)</code></td>
-            </tr>
-            <tr>
-              <td><span class="status todo">Todo</span></td>
-              <td>Randomness control</td>
-              <td>Making dropout, sampling, initialization, and training tests stable.</td>
-              <td><code>torch.manual_seed(123)</code></td>
-            </tr>
-            <tr>
-              <td><span class="status todo">Todo</span></td>
-              <td>Side-effect tests</td>
-              <td>Checking training changes parameters and evaluation does not.</td>
-              <td>compare parameter clones before and after one step</td>
-            </tr>
-            <tr>
-              <td><span class="status todo">Todo</span></td>
-              <td>Smoke tests</td>
-              <td>Running a script or tiny training loop to catch integration failures.</td>
-              <td><code>pytest -q student/tests/test_ch05_training.py</code></td>
-            </tr>
+            <tr><td>Exact assertions</td><td>Values, lengths, types</td><td><code>assert vocab["hello"] == 0</code></td><td>Ch 2</td></tr>
+            <tr><td>Parametrize</td><td>Many edge cases, one test body</td><td>empty, short, unknown token</td><td>Ch 2</td></tr>
+            <tr><td>Fixtures</td><td>Reuse tiny vocab, config, model</td><td><code>tiny_gpt_config</code></td><td>Ch 3–4</td></tr>
+            <tr><td>Tolerances</td><td>Float tensors</td><td><code>torch.allclose(a, b, atol=1e-5)</code></td><td>Ch 3</td></tr>
+            <tr><td>Seeds</td><td>Init, dropout, sampling</td><td><code>torch.manual_seed(123)</code></td><td>Ch 3</td></tr>
+            <tr><td>Side effects</td><td>Training changes params; eval does not</td><td>clone params, step, compare</td><td>Ch 5</td></tr>
+            <tr><td>Smoke tests</td><td>Integration, after unit tests pass</td><td>tiny loop runs 2 steps</td><td>Ch 5</td></tr>
           </tbody>
         </table>
-      </section>
+      </div>
 
-      <section class="card" id="milestones">
-        <h2>Milestones</h2>
-        <div class="three-grid">
-          <div class="mini">
-            <h3>Foundation</h3>
-            <ul class="checklist">
-              <li><span class="status done">Done</span><span>Understand the LLM pipeline at a high level.</span></li>
-              <li><span class="status done">Done</span><span>Use tensors, modules, gradients, and dataloaders confidently.</span></li>
-              <li><span class="status done">Done</span><span>Write small pytest tests without copying examples.</span></li>
-            </ul>
-          </div>
-          <div class="mini">
-            <h3>Core Model</h3>
-            <ul class="checklist">
-              <li><span class="status todo">Todo</span><span>Build tokenization and dataset code.</span></li>
-              <li><span class="status todo">Todo</span><span>Build attention and causal masking.</span></li>
-              <li><span class="status todo">Todo</span><span>Build a tiny GPT and generation loop.</span></li>
-            </ul>
-          </div>
-          <div class="mini">
-            <h3>Training + Finetuning</h3>
-            <ul class="checklist">
-              <li><span class="status todo">Todo</span><span>Pretrain a tiny model for a few steps.</span></li>
-              <li><span class="status todo">Todo</span><span>Adapt GPT for classification.</span></li>
-              <li><span class="status todo">Todo</span><span>Format and train on instruction examples.</span></li>
-            </ul>
-          </div>
+      <div class="two" style="margin-top:18px">
+        <div>
+          <h3>Your workspace</h3>
+<pre><code>student/
+  ch01/  warmup.py, pipeline_notes.md, toy_next_token.py
+  ch02/  tokenizer.py, dataset.py, embeddings.py
+  ch03/  attention.py
+  ch04/  gpt.py, generate.py
+  ch05/  train.py, evaluate.py, sample.py, weights.py
+  ch06/  classification_dataset.py, classifier.py, train.py, predict.py
+  ch07/  instruction_format.py, instruction_dataset.py, collate.py, train.py, evaluate.py
+  appendix_d/  training_tools.py
+  appendix_e/  lora.py
+  chXX/tests/test_*.py   one test folder per chapter</code></pre>
         </div>
-      </section>
+        <div>
+          <h3>Commands</h3>
+<pre><code># workspace root
+pytest student -q                  # everything
+pytest student/ch02/tests -q       # one chapter
+pytest student/ch02/tests -k tokenizer -q
 
-      <section class="chapter" id="chapter-setup">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Setup + Appendix A</h2>
-              <span class="status done">Done</span>
-            </div>
-            <p class="muted">Purpose: get comfortable with PyTorch and pytest before the LLM-specific code becomes dense.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/ch01/</span>
-            <span class="deliverable">student/tests/test_warmup.py</span>
-          </div>
+# official repo (reference)
+cd LLMs-from-scratch
+pytest ch04/01_main-chapter-code/tests.py</code></pre>
         </div>
+      </div>
 
-        <div class="two-grid">
-          <div>
-            <h3>Read</h3>
-            <ul class="plain-list">
-              <li><code>LLMs-from-scratch/setup/README.md</code></li>
-              <li><code>LLMs-from-scratch/appendix-A/README.md</code></li>
-              <li><code>LLMs-from-scratch/appendix-A/01_main-chapter-code/code-part1.ipynb</code></li>
-              <li><code>LLMs-from-scratch/appendix-A/01_main-chapter-code/code-part2.ipynb</code></li>
-            </ul>
-          </div>
-          <div>
-            <h3>Build</h3>
-            <ul class="plain-list">
-              <li>Tensor normalization helper.</li>
-              <li>Simple accuracy function.</li>
-              <li>Tiny <code>torch.nn.Module</code>.</li>
-              <li>Tiny <code>Dataset</code> and <code>DataLoader</code>.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="phase">
-          <h3>Tests To Write</h3>
-          <ul class="checklist">
-            <li><span class="status done">Done</span><span>Shape tests for tensor helpers.</span></li>
-            <li><span class="status done">Done</span><span>Dtype tests for labels and model outputs.</span></li>
-            <li><span class="status done">Done</span><span>Seeded test proving model initialization is repeatable.</span></li>
-            <li><span class="status done">Done</span><span>Gradient-flow test proving at least one parameter receives a gradient.</span></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <h3>Checkpoint Questions</h3>
-          <ul class="plain-list">
-            <li>What is the difference between a tensor operation and a module?</li>
-            <li>What does <code>loss.backward()</code> populate?</li>
-            <li>Why do numerical tests often use tolerances?</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="chapter" id="chapter-1">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Chapter 1: Understanding LLMs</h2>
-              <span class="status done">Done</span>
-            </div>
-            <p class="muted">Purpose: build the mental model for the whole book before writing real model code.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/ch01/pipeline_notes.md</span>
-          </div>
-        </div>
-
-        <div class="two-grid">
-          <div>
-            <h3>Learning Goals</h3>
-            <ul class="plain-list">
-              <li>Explain next-token prediction.</li>
-              <li>Distinguish pretraining from finetuning.</li>
-              <li>Describe tokenizers, embeddings, transformers, logits, and sampling.</li>
-              <li>Understand the book's full path from data to instruction finetuning.</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Build Tasks</h3>
-            <ul class="plain-list">
-              <li>Write the LLM pipeline in your own words.</li>
-              <li>Explain the difference between training and generation.</li>
-              <li>Explain input/target shifting for next-token prediction.</li>
-              <li>Explain how pretraining differs from finetuning.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="phase">
-          <h3>Checkpoint Questions</h3>
-          <ul class="checklist">
-            <li><span class="status done">Done</span><span>Explain <code>raw text -> tokens -> token IDs -> embeddings -> transformer -> logits -> probabilities -> sampled token</code>.</span></li>
-            <li><span class="status done">Done</span><span>Given token IDs, identify the shifted input and target IDs.</span></li>
-            <li><span class="status done">Done</span><span>Describe the generation loop without confusing it with training.</span></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <h3>Done Means</h3>
-          <p>You can explain <code>raw text -> tokens -> token IDs -> embeddings -> transformer -> logits -> probabilities -> sampled token</code> without reading notes.</p>
-        </div>
-      </section>
-
-      <section class="chapter" id="chapter-2">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Chapter 2: Working With Text Data</h2>
-              <span class="status todo">Todo</span>
-            </div>
-            <p class="muted">Purpose: transform raw text into training examples that a GPT model can consume.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/ch02/tokenizer.py</span>
-            <span class="deliverable">student/ch02/dataset.py</span>
-            <span class="deliverable">student/tests/test_ch02_*.py</span>
-          </div>
-        </div>
-
-        <div class="two-grid">
-          <div>
-            <h3>Read</h3>
-            <ul class="plain-list">
-              <li><code>ch02/01_main-chapter-code/ch02.ipynb</code></li>
-              <li><code>ch02/01_main-chapter-code/dataloader.ipynb</code></li>
-              <li><code>ch02/05_bpe-from-scratch/</code> as optional deeper tokenizer work.</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Core Concepts</h3>
-            <ul class="plain-list">
-              <li>Tokenization and vocabulary construction.</li>
-              <li>Special tokens and unknown tokens.</li>
-              <li>Encode/decode round trips.</li>
-              <li>Sliding windows and input/target pairs.</li>
-              <li><code>Dataset</code> and <code>DataLoader</code> contracts.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="phase">
-          <h3>Build Tasks</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Simple tokenizer with punctuation handling.</span></li>
-            <li><span class="status todo">Todo</span><span>Vocabulary builder with special tokens.</span></li>
-            <li><span class="status todo">Todo</span><span><code>encode</code> and <code>decode</code> functions.</span></li>
-            <li><span class="status todo">Todo</span><span>Chunking function for context windows.</span></li>
-            <li><span class="status todo">Todo</span><span>GPT-style dataset returning input and target tensors.</span></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <h3>Tests To Write</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Vocabulary contains expected words and IDs.</span></li>
-            <li><span class="status todo">Todo</span><span><code>decode(encode(text))</code> behaves as expected for simple text.</span></li>
-            <li><span class="status todo">Todo</span><span>Special tokens are present and stable.</span></li>
-            <li><span class="status todo">Todo</span><span>Unknown-token behavior is explicit.</span></li>
-            <li><span class="status todo">Todo</span><span>Dataset length is correct for given text, context length, and stride.</span></li>
-            <li><span class="status todo">Todo</span><span>Each item has shape <code>(context_length,)</code>.</span></li>
-            <li><span class="status todo">Todo</span><span>Input/target shifting produces expected pairs.</span></li>
-            <li><span class="status todo">Todo</span><span>Dataloader batch shape is <code>(batch_size, context_length)</code>.</span></li>
-            <li><span class="status todo">Todo</span><span>Short text fails clearly or returns zero examples by design.</span></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="chapter" id="chapter-3">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Chapter 3: Attention Mechanisms</h2>
-              <span class="status todo">Todo</span>
-            </div>
-            <p class="muted">Purpose: understand the core operation that lets tokens exchange contextual information.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/ch03/attention.py</span>
-            <span class="deliverable">student/tests/test_ch03_attention.py</span>
-          </div>
-        </div>
-
-        <div class="two-grid">
-          <div>
-            <h3>Core Concepts</h3>
-            <ul class="plain-list">
-              <li>Dot-product attention.</li>
-              <li>Queries, keys, values.</li>
-              <li>Attention scores and softmax.</li>
-              <li>Causal masking.</li>
-              <li>Dropout during training only.</li>
-              <li>Multi-head split and recombine.</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Build Tasks</h3>
-            <ul class="plain-list">
-              <li>Simple attention without trainable weights.</li>
-              <li>Self-attention with trainable projections.</li>
-              <li>Causal self-attention.</li>
-              <li>Multi-head attention.</li>
-              <li>Small visualization or printed tensor-shape trace.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="phase">
-          <h3>Tests To Write</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Output shape matches the expected batch, token, and embedding dimensions.</span></li>
-            <li><span class="status todo">Todo</span><span>Attention weights sum to 1 along the correct axis.</span></li>
-            <li><span class="status todo">Todo</span><span>Causal mask blocks attention to future tokens.</span></li>
-            <li><span class="status todo">Todo</span><span>Multi-head split/recombine preserves total embedding dimension.</span></li>
-            <li><span class="status todo">Todo</span><span>Dropout-disabled outputs are deterministic.</span></li>
-            <li><span class="status todo">Todo</span><span>A tiny manual attention calculation matches your implementation.</span></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="chapter" id="chapter-4">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Chapter 4: GPT Model From Scratch</h2>
-              <span class="status todo">Todo</span>
-            </div>
-            <p class="muted">Purpose: assemble embeddings, attention, normalization, feed-forward layers, and generation into a GPT-like model.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/ch04/gpt.py</span>
-            <span class="deliverable">student/ch04/generate.py</span>
-            <span class="deliverable">student/tests/test_ch04_*.py</span>
-          </div>
-        </div>
-
-        <div class="phase">
-          <h3>Build Tasks</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>LayerNorm.</span></li>
-            <li><span class="status todo">Todo</span><span>GELU activation.</span></li>
-            <li><span class="status todo">Todo</span><span>Feed-forward block.</span></li>
-            <li><span class="status todo">Todo</span><span>Transformer block with residual connections.</span></li>
-            <li><span class="status todo">Todo</span><span>GPT model with token and positional embeddings.</span></li>
-            <li><span class="status todo">Todo</span><span>Simple generation loop.</span></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <h3>Tests To Write</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>LayerNorm output has near-zero mean and near-unit variance.</span></li>
-            <li><span class="status todo">Todo</span><span>GELU and feed-forward preserve required dimensions.</span></li>
-            <li><span class="status todo">Todo</span><span>Transformer block output shape equals input shape.</span></li>
-            <li><span class="status todo">Todo</span><span>GPT logits shape is <code>(batch, seq_len, vocab_size)</code>.</span></li>
-            <li><span class="status todo">Todo</span><span>Generation appends exactly <code>max_new_tokens</code>.</span></li>
-            <li><span class="status todo">Todo</span><span>Context-length overflow behavior is explicit.</span></li>
-            <li><span class="status todo">Todo</span><span>Parameter count matches a tiny known config.</span></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="chapter" id="chapter-5">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Chapter 5: Pretraining</h2>
-              <span class="status todo">Todo</span>
-            </div>
-            <p class="muted">Purpose: train the GPT model on unlabeled text and generate from it.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/ch05/train.py</span>
-            <span class="deliverable">student/ch05/sample.py</span>
-            <span class="deliverable">student/tests/test_ch05_*.py</span>
-          </div>
-        </div>
-
-        <div class="two-grid">
-          <div>
-            <h3>Read</h3>
-            <ul class="plain-list">
-              <li><code>ch05/01_main-chapter-code/ch05.ipynb</code></li>
-              <li><code>ch05/01_main-chapter-code/gpt_train.py</code></li>
-              <li><code>ch05/01_main-chapter-code/gpt_generate.py</code></li>
-            </ul>
-          </div>
-          <div>
-            <h3>Core Concepts</h3>
-            <ul class="plain-list">
-              <li>Cross-entropy loss for next-token prediction.</li>
-              <li>Training vs validation loss.</li>
-              <li>Optimizer step lifecycle.</li>
-              <li>Evaluation mode and no-grad sections.</li>
-              <li>Greedy, temperature, and top-k sampling.</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="phase">
-          <h3>Tests To Write</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Loss function returns a scalar tensor.</span></li>
-            <li><span class="status todo">Todo</span><span>One training step updates at least one parameter.</span></li>
-            <li><span class="status todo">Todo</span><span>Evaluation does not update parameters.</span></li>
-            <li><span class="status todo">Todo</span><span>Train/eval mode switches are correct.</span></li>
-            <li><span class="status todo">Todo</span><span>Greedy generation is deterministic.</span></li>
-            <li><span class="status todo">Todo</span><span>Top-k sampling never samples outside the top-k candidates.</span></li>
-            <li><span class="status todo">Todo</span><span>Tiny model can overfit a tiny dataset enough to show loss decreases.</span></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="chapter" id="chapter-6">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Chapter 6: Classification Finetuning</h2>
-              <span class="status todo">Todo</span>
-            </div>
-            <p class="muted">Purpose: adapt a generative GPT backbone for supervised text classification.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/ch06/classification_dataset.py</span>
-            <span class="deliverable">student/ch06/classifier.py</span>
-            <span class="deliverable">student/tests/test_ch06_*.py</span>
-          </div>
-        </div>
-
-        <div class="phase">
-          <h3>Build Tasks</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Classification dataset for text-label rows.</span></li>
-            <li><span class="status todo">Todo</span><span>Padding and truncation logic.</span></li>
-            <li><span class="status todo">Todo</span><span>Classification head on top of a GPT representation.</span></li>
-            <li><span class="status todo">Todo</span><span>Accuracy function.</span></li>
-            <li><span class="status todo">Todo</span><span>Tiny finetuning loop.</span></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <h3>Tests To Write</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Dataset returns <code>(input_ids, label)</code>.</span></li>
-            <li><span class="status todo">Todo</span><span>Padded examples have equal length.</span></li>
-            <li><span class="status todo">Todo</span><span>Labels use the expected dtype.</span></li>
-            <li><span class="status todo">Todo</span><span>Classifier logits shape is <code>(batch_size, num_classes)</code>.</span></li>
-            <li><span class="status todo">Todo</span><span>Accuracy is correct for known predictions.</span></li>
-            <li><span class="status todo">Todo</span><span>Frozen parameters do not change after one training step.</span></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="chapter" id="chapter-7">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Chapter 7: Instruction Finetuning</h2>
-              <span class="status todo">Todo</span>
-            </div>
-            <p class="muted">Purpose: format supervised instruction examples and train the model to produce responses.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/ch07/instruction_format.py</span>
-            <span class="deliverable">student/ch07/instruction_dataset.py</span>
-            <span class="deliverable">student/tests/test_ch07_*.py</span>
-          </div>
-        </div>
-
-        <div class="phase">
-          <h3>Build Tasks</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Instruction formatting function.</span></li>
-            <li><span class="status todo">Todo</span><span>Instruction dataset for instruction/input/output records.</span></li>
-            <li><span class="status todo">Todo</span><span>Padding and optional label masking.</span></li>
-            <li><span class="status todo">Todo</span><span>Response extraction helper.</span></li>
-            <li><span class="status todo">Todo</span><span>Tiny instruction finetuning loop.</span></li>
-          </ul>
-        </div>
-
-        <div class="phase">
-          <h3>Tests To Write</h3>
-          <ul class="checklist">
-            <li><span class="status todo">Todo</span><span>Prompt formatting exactly matches the intended template.</span></li>
-            <li><span class="status todo">Todo</span><span>Missing optional input field is handled correctly.</span></li>
-            <li><span class="status todo">Todo</span><span>Dataset returns correct token tensors.</span></li>
-            <li><span class="status todo">Todo</span><span>Padding and labels align correctly.</span></li>
-            <li><span class="status todo">Todo</span><span>Response extraction removes prompt text.</span></li>
-            <li><span class="status todo">Todo</span><span>Generation helper returns a string and respects max length.</span></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="chapter" id="appendices">
-        <div class="chapter-head">
-          <div>
-            <div class="chapter-title">
-              <h2>Appendices D/E: Training Extras and LoRA</h2>
-              <span class="status todo">Todo</span>
-            </div>
-            <p class="muted">Purpose: add professional training-loop tools and parameter-efficient finetuning.</p>
-          </div>
-          <div>
-            <span class="deliverable">student/appendix_d/</span>
-            <span class="deliverable">student/appendix_e/</span>
-          </div>
-        </div>
-
-        <div class="two-grid">
-          <div>
-            <h3>Appendix D Tests</h3>
-            <ul class="plain-list">
-              <li>Learning rate scheduler changes LR as expected.</li>
-              <li>Checkpoint save/load preserves parameters.</li>
-              <li>Resume training starts from the expected state.</li>
-              <li>Early stopping triggers after patience is exceeded.</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Appendix E Tests</h3>
-            <ul class="plain-list">
-              <li>Base model parameters are frozen.</li>
-              <li>LoRA parameters are trainable.</li>
-              <li>Output shape is unchanged.</li>
-              <li>Trainable parameter count is much smaller.</li>
-              <li>Merge/unmerge behavior is correct if implemented.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" id="repo">
-        <h2>Repo Structure</h2>
-        <p class="muted">Condensed map of this checkout. Main book code is under <code>LLMs-from-scratch/</code>; your work is under <code>student/</code>.</p>
+      <details class="ref">
+        <summary>Official repo map</summary>
         <div class="repo-map">
-          <pre><code>./
-  study-plan.html
-  student/
-    README.md
-    ch01/
-    ch02/
-    ch03/
-    ch04/
-    ch05/
-    ch06/
-    ch07/
-    tests/
-  LLMs-from-scratch/
-    README.md
-    pyproject.toml
-    requirements.txt
-    conftest.py</code></pre>
-
-          <pre><code>LLMs-from-scratch/setup/
-  README.md
-  01_optional-python-setup-preferences/
+<pre><code>LLMs-from-scratch/setup/
   02_installing-python-libraries/
     python_environment_check.py
-    tests.py
-  03_optional-docker-environment/
-  04_optional-aws-sagemaker-notebook/</code></pre>
 
-          <pre><code>LLMs-from-scratch/ch01/
-  README.md
-
-LLMs-from-scratch/ch02/
+LLMs-from-scratch/appendix-A/
+  01_main-chapter-code/
+    code-part1.ipynb
+    code-part2.ipynb</code></pre>
+<pre><code>LLMs-from-scratch/ch02/
   01_main-chapter-code/
     ch02.ipynb
     dataloader.ipynb
@@ -999,136 +465,529 @@ LLMs-from-scratch/ch02/
   02_bonus_bytepair-encoder/
   03_bonus_embedding-vs-matmul/
   04_bonus_dataloader-intuition/
-  05_bpe-from-scratch/
-    tests.py</code></pre>
-
-          <pre><code>LLMs-from-scratch/ch03/
+  05_bpe-from-scratch/</code></pre>
+<pre><code>LLMs-from-scratch/ch03/
   01_main-chapter-code/
     ch03.ipynb
     multihead-attention.ipynb
     exercise-solutions.ipynb
   02_bonus_efficient-multihead-attention/
   03_understanding-buffers/</code></pre>
-
-          <pre><code>LLMs-from-scratch/ch04/
+<pre><code>LLMs-from-scratch/ch04/
   01_main-chapter-code/
-    ch04.ipynb
-    gpt.py
-    previous_chapters.py
-    tests.py
+    ch04.ipynb, gpt.py, tests.py
   02_performance-analysis/
-  03_kv-cache/
-  04_gqa/
-  05_mla/
-  06_swa/
-  07_moe/
-  08_deltanet/
-  09_dsa/
-  10_kv-sharing/</code></pre>
-
-          <pre><code>LLMs-from-scratch/ch05/
+  03_kv-cache/ … 10_kv-sharing/</code></pre>
+<pre><code>LLMs-from-scratch/ch05/
   01_main-chapter-code/
-    ch05.ipynb
-    gpt_train.py
-    gpt_generate.py
-    gpt_download.py
-    previous_chapters.py
-    tests.py
+    ch05.ipynb, gpt_train.py
+    gpt_generate.py, gpt_download.py
   02_alternative_weight_loading/
   03_bonus_pretraining_on_gutenberg/
   04_learning_rate_schedulers/
-  05_bonus_hparam_tuning/
-  06_user_interface/
-  07_gpt_to_llama/
-  08_memory_efficient_weight_loading/
-  09_extending-tokenizers/
-  10_llm-training-speed/
-  11_qwen3/
-  12_gemma3/
-  13_olmo3/
-  14_ch05_with_other_llms/
-  15_tiny-aya/
-  16_qwen3.5/
-  17_gemma4/
-  18_muon/</code></pre>
-
-          <pre><code>LLMs-from-scratch/ch06/
+  05 … 18  (bonus: other LLMs, speed, Muon)</code></pre>
+<pre><code>LLMs-from-scratch/ch06/
   01_main-chapter-code/
-    ch06.ipynb
-    gpt_class_finetune.py
-    gpt_download.py
-    previous_chapters.py
-    tests.py
+    ch06.ipynb, gpt_class_finetune.py
   02_bonus_additional-experiments/
   03_bonus_imdb-classification/
   04_user_interface/</code></pre>
-
-          <pre><code>LLMs-from-scratch/ch07/
+<pre><code>LLMs-from-scratch/ch07/
   01_main-chapter-code/
     ch07.ipynb
     gpt_instruction_finetuning.py
     ollama_evaluate.py
-    previous_chapters.py
-    tests.py
   02_dataset-utilities/
   03_model-evaluation/
   04_preference-tuning-with-dpo/
   05_dataset-generation/
   06_user_interface/</code></pre>
+<pre><code>LLMs-from-scratch/appendix-D/01_main-chapter-code/
+LLMs-from-scratch/appendix-E/01_main-chapter-code/
 
-          <pre><code>LLMs-from-scratch/appendix-A/
-  01_main-chapter-code/
-  02_setup-recommendations/
-
-LLMs-from-scratch/appendix-B/
-LLMs-from-scratch/appendix-C/
-
-LLMs-from-scratch/appendix-D/
-  01_main-chapter-code/
-
-LLMs-from-scratch/appendix-E/
-  01_main-chapter-code/</code></pre>
-
-          <pre><code>LLMs-from-scratch/pkg/
-  llms_from_scratch/
-    appendix_a.py
-    appendix_d.py
-    appendix_e.py
-    ch02.py
-    ch03.py
-    ch04.py
-    ch05.py
-    ch06.py
-    ch07.py
-    generate.py
-    llama3.py
-    qwen3.py
-    utils.py
-    kv_cache/
-    kv_cache_batched/
-    tests/</code></pre>
+LLMs-from-scratch/pkg/llms_from_scratch/
+  ch02.py … ch07.py
+  appendix_a.py, appendix_d.py, appendix_e.py</code></pre>
         </div>
-      </section>
-
-      <section class="card" id="commands">
-        <h2>Commands</h2>
-        <div class="two-grid">
-          <div>
-            <h3>From Workspace Root</h3>
-            <pre><code>pytest student/tests
-pytest student/tests -q
-pytest student/tests -k tokenizer</code></pre>
-          </div>
-          <div>
-            <h3>From Official Repo</h3>
-            <pre><code>cd LLMs-from-scratch
-pytest
-pytest ch04/01_main-chapter-code/tests.py
-pytest ch05/01_main-chapter-code/tests.py</code></pre>
-          </div>
-        </div>
-      </section>
-    </div>
+      </details>
+    </section>
   </main>
+
+  <footer>
+    <div class="wrap">To update progress, change the <code>status</code> of an exercise in the <code>PLAN</code> data at the bottom of this file. Chapter status, the build path, the progress meter, and the "Now" card follow from it.</div>
+  </footer>
+
+  <script>
+    /* ------------------------------------------------------------------
+       PLAN — the single source of truth.
+       Exercise status: "todo" | "progress" | "done".
+       Chapter status is derived from its exercises.
+       Text in backticks renders as code.
+       ------------------------------------------------------------------ */
+    const PLAN = [
+      {
+        id: "a", num: "A", tab: "App A", stage: "PyTorch basics", shape: "tensors",
+        title: "PyTorch and pytest warmup",
+        purpose: "Get comfortable with tensors, modules, gradients, and pytest before the LLM code gets dense.",
+        flow: ["tensor", "nn.Module", "loss", "loss.backward()", ".grad"],
+        sources: ["`setup/README.md`", "`appendix-A/01_main-chapter-code/code-part1.ipynb`", "`appendix-A/01_main-chapter-code/code-part2.ipynb`"],
+        questions: [
+          "What is the difference between a tensor operation and a module?",
+          "What does `loss.backward()` populate?",
+          "Why do numerical tests often use tolerances?"
+        ],
+        gate: "Seeded tests pass, and you can say where gradients are stored.",
+        cmd: "pytest student/ch01/tests -q",
+        exercises: [
+          { sec: "A.1–A.3", title: "Tensor helpers", status: "done", files: ["student/ch01/warmup.py"],
+            build: "Normalization helper and accuracy function.",
+            tests: ["Shape of helper outputs", "Dtype of labels and outputs"] },
+          { sec: "A.4–A.5", title: "Tiny module and gradients", status: "done", files: ["student/ch01/warmup.py"],
+            build: "A tiny `torch.nn.Module` and one backward pass.",
+            tests: ["Seeded initialization is repeatable", "At least one parameter receives a gradient"] },
+          { sec: "A.6", title: "Dataset and DataLoader", status: "done", files: ["student/ch01/tests/test_warmup.py"],
+            build: "A tiny `Dataset` and `DataLoader`.",
+            tests: ["Item and batch shapes"] }
+        ]
+      },
+      {
+        id: "ch1", num: "1", tab: "Ch 1", stage: "Pipeline map", shape: "mental model",
+        title: "Understanding LLMs",
+        purpose: "Build the mental model for the whole book before real model code.",
+        flow: ["raw text", "tokens", "token IDs", "embeddings", "transformer", "logits", "probabilities", "sampled token"],
+        sources: ["`ch01/README.md` and book chapter 1"],
+        questions: [
+          "Explain the full pipeline from raw text to a sampled token.",
+          "Given token IDs, which are the inputs and which are the targets?",
+          "How is the generation loop different from training?",
+          "How is pretraining different from finetuning?"
+        ],
+        gate: "You explain the pipeline above without notes.",
+        cmd: "pytest student/ch01/tests -q",
+        exercises: [
+          { sec: "1.1–1.9", title: "Pipeline in your own words", status: "done", files: ["student/ch01/pipeline_notes.md"],
+            build: "Notes on next-token prediction, training vs generation, and pretraining vs finetuning.",
+            tests: ["Checkpoint questions answered without notes"] },
+          { sec: "1.x", title: "Toy next-token prediction", status: "done", files: ["student/ch01/toy_next_token.py"],
+            build: "Shift token IDs into input and target pairs.",
+            tests: ["Shifted pairs have the expected values"] }
+        ]
+      },
+      {
+        id: "ch2", num: "2", tab: "Ch 2", stage: "Text → vectors", shape: "(B, T, D)",
+        title: "Working with text data",
+        purpose: "Turn raw text into input embeddings that a GPT model can consume.",
+        flow: ["raw text", "token IDs (N,)", "windows", "batch (B, T)", "token emb (B, T, D)", "+ positions (T, D)", "GPT input (B, T, D)"],
+        sources: [
+          "`ch02/01_main-chapter-code/ch02.ipynb`",
+          "`ch02/01_main-chapter-code/dataloader.ipynb` — during Exercise 3",
+          "Detailed exercise brief: `student/ch02/README.md`"
+        ],
+        optional: ["`ch02/03_bonus_embedding-vs-matmul/` after embeddings", "`ch02/05_bpe-from-scratch/` after tiktoken"],
+        questions: [
+          "What is the difference between a token, a token ID, and an embedding?",
+          "Why do a simple tokenizer and BPE handle unknown words differently?",
+          "For `[10, 11, 12, 13]` and context length 3, what are the input and target?",
+          "What does `stride` change? What does it not change?",
+          "Why does `(B, T)` become `(B, T, D)` after the embedding lookup?",
+          "Why can `(T, D)` be added to `(B, T, D)`?",
+          "What information is lost without positional embeddings?"
+        ],
+        gate: "You trace text to `(B, T, D)` without notes, and every edge case has intentional behavior.",
+        cmd: "pytest student/ch02/tests -q",
+        exercises: [
+          { sec: "2.1–2.4", title: "Simple tokenizer and vocabulary", status: "progress", files: ["student/ch02/tokenizer.py", "student/ch02/tests/test_tokenizer.py"],
+            build: "Split words and punctuation. Build stable token↔ID maps with `<|unk|>` and `<|endoftext|>`. Implement `encode` and `decode`.",
+            tests: ["Punctuation is split from words", "No duplicate vocabulary entries", "Stable IDs for a fixed input", "Both special tokens exist", "`decode(encode(text))` follows your spacing rules", "Unknown word → `<|unk|>` or a clear error", "Invalid ID fails clearly"] },
+          { sec: "2.5", title: "BPE with tiktoken", status: "todo", files: ["student/ch02/tests/test_tokenizer.py"],
+            build: "Use `tiktoken.get_encoding(\"gpt2\")`. Explore unseen words, whitespace, and special tokens. Do not build BPE yet.",
+            tests: ["Round trip on simple text", "Unseen word encodes without `<|unk|>`", "`<|endoftext|>` needs explicit permission", "Same input gives same IDs"] },
+          { sec: "2.6", title: "Sliding windows, Dataset, DataLoader", status: "todo", files: ["student/ch02/dataset.py", "student/ch02/tests/test_dataset.py"],
+            build: "Windows with `context_length` and `stride`. Targets shifted by one. Wrap in a `Dataset` and a `DataLoader`.",
+            tests: ["Exact values of one input/target pair", "Dataset length for different strides", "Item shape `(context_length,)`, dtype `torch.long`", "Batch shape `(batch_size, context_length)`", "Short text behavior is explicit", "Invalid context length or stride fails clearly"] },
+          { sec: "2.7–2.8", title: "Token and positional embeddings", status: "todo", files: ["student/ch02/embeddings.py", "student/ch02/tests/test_embeddings.py"],
+            build: "`nn.Embedding` for tokens and for positions `torch.arange(T)`. Add them.",
+            tests: ["A lookup equals the selected weight row", "Token embeddings `(B, T, D)`", "Position embeddings `(T, D)`", "Sum keeps `(B, T, D)`", "Sequence longer than context fails clearly", "Seeded init is repeatable"] }
+        ]
+      },
+      {
+        id: "ch3", num: "3", tab: "Ch 3", stage: "Attention", shape: "(B, T, D)",
+        title: "Attention mechanisms",
+        purpose: "Let each token collect information from earlier tokens.",
+        flow: ["x (B, T, D_in)", "Q, K, V (B, T, D_out)", "scores (B, T, T)", "mask + softmax", "weights (B, T, T)", "context (B, T, D_out)"],
+        sources: ["`ch03/01_main-chapter-code/ch03.ipynb`", "`ch03/01_main-chapter-code/multihead-attention.ipynb`"],
+        optional: ["`ch03/02_bonus_efficient-multihead-attention/`", "`ch03/03_understanding-buffers/`"],
+        questions: [
+          "Why is the scaling factor based on the key dimension?",
+          "Which axis receives softmax, and why?",
+          "Why must the causal mask be applied before softmax?",
+          "How do heads divide and then restore the embedding dimension?"
+        ],
+        gate: "You draw every tensor shape, prove causality with a test, and read one attention row as a probability distribution.",
+        cmd: "pytest student/ch03/tests -q",
+        exercises: [
+          { sec: "3.1–3.3", title: "Attention without trainable weights", status: "todo", files: ["student/ch03/attention.py"],
+            build: "Compute one context vector by hand, then all of them: scores → weights → context.",
+            tests: ["Matches a hand calculation", "Weights sum to 1 on the key axis", "Output shape"] },
+          { sec: "3.4", title: "Self-attention with Q, K, V", status: "todo", files: ["student/ch03/attention.py"],
+            build: "Trainable query, key, and value projections.",
+            tests: ["Seeded output", "`(B, T, D_in)` → `(B, T, D_out)`", "Gradients reach projection weights"] },
+          { sec: "3.5", title: "Causal mask and dropout", status: "todo", files: ["student/ch03/attention.py"],
+            build: "Registered upper-triangular mask applied before softmax. Dropout on weights in training mode only.",
+            tests: ["Future-token weights are zero", "Eval mode is deterministic"] },
+          { sec: "3.6", title: "Multi-head attention", status: "todo", files: ["student/ch03/attention.py", "student/ch03/tests/test_attention.py"],
+            build: "Split into heads, attend in parallel, recombine, output projection.",
+            tests: ["Split and recombine keep `D_out`", "Incompatible `D_out` / heads fails clearly"] }
+        ]
+      },
+      {
+        id: "ch4", num: "4", tab: "Ch 4", stage: "GPT model", shape: "(B, T, V)",
+        title: "A GPT model from scratch",
+        purpose: "Assemble embeddings, attention, normalization, and feed-forward layers into a GPT, then generate text.",
+        flow: ["IDs (B, T)", "embeddings (B, T, D)", "N × block (B, T, D)", "final norm", "logits (B, T, V)", "next ID"],
+        sources: ["`ch04/01_main-chapter-code/ch04.ipynb`", "`ch04/01_main-chapter-code/gpt.py`"],
+        optional: ["`ch04/03_kv-cache/` after generation works"],
+        questions: [
+          "Why are residual paths shape-preserving?",
+          "Why does the output head use the vocabulary size?",
+          "Which logit position predicts the next token?",
+          "Why must generation crop a long context?"
+        ],
+        gate: "The tiny GPT runs end to end, each block has a unit test, and you trace `(B, T)` to `(B, T, V)`.",
+        cmd: "pytest student/ch04/tests -q",
+        exercises: [
+          { sec: "4.1–4.2", title: "Config and LayerNorm", status: "todo", files: ["student/ch04/gpt.py"],
+            build: "A tiny GPT config dict. LayerNorm with scale and shift.",
+            tests: ["Keeps shape", "Mean ≈ 0 and variance ≈ 1 on the last axis"] },
+          { sec: "4.3", title: "GELU and feed-forward", status: "todo", files: ["student/ch04/gpt.py"],
+            build: "GELU approximation. Expand ×4 → GELU → project back.",
+            tests: ["Known GELU values", "Feed-forward keeps `(B, T, D)`"] },
+          { sec: "4.4–4.5", title: "Residuals and transformer block", status: "todo", files: ["student/ch04/gpt.py"],
+            build: "Pre-norm block: LayerNorm, attention, dropout, residual; LayerNorm, feed-forward, dropout, residual.",
+            tests: ["Output shape equals input shape", "Gradients reach the first layer"] },
+          { sec: "4.6", title: "GPT model", status: "todo", files: ["student/ch04/gpt.py"],
+            build: "Embeddings, block stack, final norm, output head.",
+            tests: ["Logits `(B, T, V)`", "Parameter count for a tiny known config"] },
+          { sec: "4.7", title: "Greedy generation", status: "todo", files: ["student/ch04/generate.py"],
+            build: "Crop context, take last-step logits, argmax, append. No temperature yet.",
+            tests: ["Appends exactly `max_new_tokens`", "Context overflow is cropped", "Deterministic output"] }
+        ]
+      },
+      {
+        id: "ch5", num: "5", tab: "Ch 5", stage: "Pretraining", shape: "trained weights",
+        title: "Pretraining on unlabeled text",
+        purpose: "Train the GPT on raw text, measure it, and sample from it.",
+        flow: ["logits (B, T, V)", "flatten (B·T, V)", "targets (B·T,)", "cross-entropy (scalar)", "backward", "optimizer step"],
+        sources: ["`ch05/01_main-chapter-code/ch05.ipynb`", "`gpt_train.py`", "`gpt_generate.py`"],
+        optional: ["`ch05/04_learning_rate_schedulers/`", "`ch05/03_bonus_pretraining_on_gutenberg/`"],
+        questions: [
+          "Why must logits and targets be flattened for cross-entropy?",
+          "Why is perplexity the exponential of cross-entropy?",
+          "What changes between training and evaluation?",
+          "How do temperature and top-k change the distribution?",
+          "What state is needed to resume training?"
+        ],
+        gate: "Loss decreases on a tiny corpus, evaluation has no side effects, sampling rules hold, and a restored model gives identical logits.",
+        cmd: "pytest student/ch05/tests -q",
+        exercises: [
+          { sec: "5.1", title: "Loss and evaluation", status: "todo", files: ["student/ch05/evaluate.py"],
+            build: "Batch loss and DataLoader loss under `torch.no_grad()`.",
+            tests: ["Loss is a scalar tensor", "Evaluation does not change parameters"] },
+          { sec: "5.2", title: "Training loop", status: "todo", files: ["student/ch05/train.py"],
+            build: "zero_grad → forward → loss → backward → step. Periodic train/val eval and a text sample.",
+            tests: ["One step changes at least one parameter", "Train/eval mode switches", "Tiny model overfits a tiny dataset"] },
+          { sec: "5.3", title: "Temperature and top-k", status: "todo", files: ["student/ch05/sample.py"],
+            build: "Temperature scaling and top-k filter. Keep greedy as the baseline.",
+            tests: ["Greedy is deterministic", "Top-k never samples outside the top k"] },
+          { sec: "5.4", title: "Save and load", status: "todo", files: ["student/ch05/weights.py"],
+            build: "Save and restore model and optimizer state.",
+            tests: ["Restored model gives identical logits"] },
+          { sec: "5.5", title: "Load GPT-2 weights", status: "todo", files: ["student/ch05/weights.py"],
+            build: "Map official arrays into your model. Check shapes before assignment.",
+            tests: ["Shape mismatch fails clearly", "Loaded model generates coherent text (smoke)"] }
+        ]
+      },
+      {
+        id: "ch6", num: "6", tab: "Ch 6", stage: "Classifier", shape: "(B, C)",
+        title: "Finetuning for classification",
+        purpose: "Adapt the pretrained GPT to label text (spam / not spam).",
+        flow: ["IDs (B, T) padded", "GPT backbone (B, T, D)", "last token (B, D)", "head (B, C)", "loss + accuracy"],
+        sources: ["`ch06/01_main-chapter-code/ch06.ipynb`", "`gpt_class_finetune.py`"],
+        optional: ["`ch06/02_bonus_additional-experiments/`", "`ch06/03_bonus_imdb-classification/`"],
+        questions: [
+          "Why must all examples in a batch have equal length?",
+          "Which token representation feeds the classifier, and why?",
+          "Which parameters are frozen, and how does a test prove it?",
+          "Why must prediction reuse the training preprocessing?"
+        ],
+        gate: "Splits are explicit, shapes and dtypes are tested, only intended parameters update, and known examples get expected labels.",
+        cmd: "pytest student/ch06/tests -q",
+        exercises: [
+          { sec: "6.1–6.3", title: "Dataset and DataLoaders", status: "todo", files: ["student/ch06/classification_dataset.py"],
+            build: "Deterministic train/val/test splits. Tokenize, truncate, pad, integer labels.",
+            tests: ["Item is `(input_ids, label)`", "Padded items have equal length", "Label dtype is `torch.long`"] },
+          { sec: "6.4–6.5", title: "Classification head", status: "todo", files: ["student/ch06/classifier.py"],
+            build: "Load Chapter 5 weights. Replace the head with `num_classes` outputs. Freeze the backbone, unfreeze chosen layers.",
+            tests: ["Logits `(B, C)`", "Frozen parameters do not change after one step"] },
+          { sec: "6.6", title: "Loss and accuracy", status: "todo", files: ["student/ch06/train.py"],
+            build: "Last-token logits → cross-entropy. Accuracy over a loader.",
+            tests: ["Accuracy on known predictions"] },
+          { sec: "6.7–6.8", title: "Finetune and predict", status: "todo", files: ["student/ch06/train.py", "student/ch06/predict.py"],
+            build: "Train with validation checks. `predict(text)` with the same preprocessing.",
+            tests: ["Loss decreases (smoke)", "Prediction returns a valid label"] }
+        ]
+      },
+      {
+        id: "ch7", num: "7", tab: "Ch 7", stage: "Instruction model", shape: "response text",
+        title: "Finetuning to follow instructions",
+        purpose: "Format instruction records and train the model to write responses.",
+        flow: ["record", "prompt template", "token IDs", "collate: pad + shift (B, T)", "mask −100", "loss"],
+        sources: ["`ch07/01_main-chapter-code/ch07.ipynb`", "`gpt_instruction_finetuning.py`"],
+        optional: ["`ch07/03_model-evaluation/`", "`ch07/04_preference-tuning-with-dpo/`"],
+        questions: [
+          "Which text is the prompt, and which is the response?",
+          "Why are labels shifted? Which positions should the loss ignore?",
+          "How can you prove padding and labels stay aligned?",
+          "Why must response extraction use the same formatter?"
+        ],
+        gate: "Formatting is tested exactly, collation alignment is visible on tiny IDs, training runs end to end, and saved responses contain no prompt.",
+        cmd: "pytest student/ch07/tests -q",
+        exercises: [
+          { sec: "7.1–7.2", title: "Format and dataset", status: "todo", files: ["student/ch07/instruction_format.py", "student/ch07/instruction_dataset.py"],
+            build: "One exact template for instruction, optional input, and response. Split before training.",
+            tests: ["Template matches exactly", "Missing input field handled", "Dataset returns token tensors"] },
+          { sec: "7.3–7.4", title: "Collate and DataLoaders", status: "todo", files: ["student/ch07/collate.py"],
+            build: "Pad, shift labels, truncate, and mask padding with `-100`.",
+            tests: ["Padding and labels align on tiny IDs", "Only the first pad token stays in targets"] },
+          { sec: "7.5–7.6", title: "Load and finetune", status: "todo", files: ["student/ch07/train.py"],
+            build: "Pretrained model, instruction loss, small run with validation.",
+            tests: ["Loss decreases (smoke)"] },
+          { sec: "7.7", title: "Generate and extract", status: "todo", files: ["student/ch07/evaluate.py"],
+            build: "Generate per test record, strip the prompt, save in a new field.",
+            tests: ["Extraction removes prompt text", "Returns a string within max length", "Source fields unchanged"] },
+          { sec: "7.8–7.9", title: "Evaluate", status: "todo", files: ["student/ch07/evaluate.py"],
+            build: "Read responses by hand first, then score. Write down method and limits.",
+            tests: ["Scoring function on fixed examples"] }
+        ]
+      },
+      {
+        id: "extras", num: "D·E", tab: "App D/E", stage: "Extras", shape: "optional",
+        title: "Training tools and LoRA",
+        purpose: "Optional: better training loops and parameter-efficient finetuning.",
+        flow: ["W x", "+", "α · B A x", "rank r ≪ D", "few trainable params"],
+        sources: ["`appendix-D/01_main-chapter-code/`", "`appendix-E/01_main-chapter-code/`"],
+        questions: [
+          "Why warm up the learning rate?",
+          "What does gradient clipping protect against?",
+          "Why does LoRA start with an output of zero change?"
+        ],
+        gate: "Each feature has an isolated deterministic test. LoRA keeps output shape and cuts trainable parameters.",
+        cmd: "pytest student/appendix_d student/appendix_e -q",
+        exercises: [
+          { sec: "D", title: "Warmup, cosine decay, clipping, resume", status: "todo", files: ["student/appendix_d/training_tools.py"],
+            build: "Add one feature at a time. No long training runs.",
+            tests: ["LR follows the schedule", "Gradient norm is clipped", "Resume starts from saved state", "Early stopping after patience"] },
+          { sec: "E", title: "LoRA", status: "todo", files: ["student/appendix_e/lora.py"],
+            build: "Low-rank update on chosen linear layers. Freeze the base model.",
+            tests: ["Base params frozen, LoRA params trainable", "Output shape unchanged", "Trainable count much smaller"] }
+        ]
+      }
+    ];
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function fmt(text) {
+      return escapeHtml(text).replace(/`([^`]+)`/g, "<code>$1</code>");
+    }
+
+    function chapterStatus(chapter) {
+      const statuses = chapter.exercises.map(ex => ex.status);
+      if (statuses.every(s => s === "done")) return "done";
+      if (statuses.some(s => s !== "todo")) return "progress";
+      return "todo";
+    }
+
+    function doneCount(chapter) {
+      return chapter.exercises.filter(ex => ex.status === "done").length;
+    }
+
+    function findCurrent() {
+      for (const status of ["progress", "todo"]) {
+        for (const chapter of PLAN) {
+          const index = chapter.exercises.findIndex(ex => ex.status === status);
+          if (index >= 0) return { chapter, index };
+        }
+      }
+      return null;
+    }
+
+    function nextExercise(current) {
+      const chapterIndex = PLAN.indexOf(current.chapter);
+      if (current.index + 1 < current.chapter.exercises.length) {
+        return { chapter: current.chapter, ex: current.chapter.exercises[current.index + 1] };
+      }
+      const nextChapter = PLAN[chapterIndex + 1];
+      return nextChapter ? { chapter: nextChapter, ex: nextChapter.exercises[0] } : null;
+    }
+
+    const STATUS_LABEL = { done: "Done", progress: "In progress", todo: "Todo" };
+
+    function pill(status) {
+      return `<span class="pill ${status}">${STATUS_LABEL[status]}</span>`;
+    }
+
+    function renderMeter() {
+      const all = PLAN.flatMap(c => c.exercises);
+      const done = all.filter(ex => ex.status === "done").length;
+      document.getElementById("meter-fill").style.width = `${(done / all.length) * 100}%`;
+      document.getElementById("meter-text").textContent = `${done} / ${all.length} exercises`;
+    }
+
+    function renderNow(current) {
+      const card = document.getElementById("now-card");
+      if (!current) {
+        card.innerHTML = `<span class="eyebrow">Complete</span><h3>Every exercise is done.</h3>`;
+        return;
+      }
+      const ex = current.chapter.exercises[current.index];
+      const next = nextExercise(current);
+      card.innerHTML = `
+        <span class="eyebrow">${ex.status === "progress" ? "Now working on" : "Start next"}</span>
+        <h3>${fmt(ex.title)}</h3>
+        <span class="muted">${fmt(current.chapter.tab)} · section ${ex.sec}</span>
+        <dl>
+          <dt>Files</dt><dd>${ex.files.map(f => `<code>${escapeHtml(f)}</code>`).join(" ")}</dd>
+          <dt>Run</dt><dd><code>${escapeHtml(current.chapter.cmd)}</code></dd>
+          ${next ? `<dt>Then</dt><dd>${fmt(next.ex.title)} <span class="muted">(${fmt(next.chapter.tab)})</span></dd>` : ""}
+        </dl>`;
+    }
+
+    function renderPath() {
+      const map = document.getElementById("path-map");
+      map.innerHTML = PLAN.map(chapter => {
+        const status = chapterStatus(chapter);
+        const pct = (doneCount(chapter) / chapter.exercises.length) * 100;
+        const pctLabel = status === "progress" ? "NOW" : status.toUpperCase();
+        return `
+          <button class="stage ${status}" data-chapter="${chapter.id}" aria-label="${escapeHtml(chapter.tab)}: ${escapeHtml(chapter.stage)}, ${STATUS_LABEL[status]}">
+            <span class="tag">${escapeHtml(chapter.tab)} · ${pctLabel}</span>
+            <span class="name">${escapeHtml(chapter.stage)}</span>
+            <span class="shape">→ ${escapeHtml(chapter.shape)}</span>
+            <span class="mini"><span style="width:${pct}%"></span></span>
+          </button>`;
+      }).join("");
+    }
+
+    function renderExercise(ex) {
+      return `
+        <li class="ex ${ex.status}">
+          <span class="dot" aria-hidden="true"></span>
+          <details ${ex.status === "progress" ? "open" : ""}>
+            <summary>
+              <span><span class="sec">${escapeHtml(ex.sec)}</span><span class="ttl">${fmt(ex.title)}</span></span>
+              ${pill(ex.status)}
+            </summary>
+            <div class="ex-body">
+              <h4>Build</h4>
+              <p>${fmt(ex.build)}</p>
+              <h4>Tests</h4>
+              <ul>${ex.tests.map(t => `<li>${fmt(t)}</li>`).join("")}</ul>
+              <h4>Files</h4>
+              <div class="files">${ex.files.map(f => `<code>${escapeHtml(f)}</code>`).join("")}</div>
+            </div>
+          </details>
+        </li>`;
+    }
+
+    function renderPanel(chapter) {
+      const status = chapterStatus(chapter);
+      const optional = chapter.optional
+        ? `<div class="side-block"><h4>Optional, after it works</h4><ul>${chapter.optional.map(s => `<li>${fmt(s)}</li>`).join("")}</ul></div>`
+        : "";
+      return `
+        <div class="panel" role="tabpanel" id="panel-${chapter.id}" aria-labelledby="tab-${chapter.id}" hidden>
+          <div class="panel-head">
+            <div class="panel-num">${escapeHtml(chapter.num)}</div>
+            <div>
+              <h2>${fmt(chapter.title)}</h2>
+              <p class="muted">${fmt(chapter.purpose)}</p>
+            </div>
+            ${pill(status)}
+          </div>
+          <div class="flow" aria-label="Tensor flow">
+            ${chapter.flow.map(n => `<span class="node">${escapeHtml(n)}</span>`).join('<span class="arrow">→</span>')}
+          </div>
+          <div class="panel-body">
+            <div class="panel-main">
+              <h3>Exercises in order</h3>
+              <ol class="rail">${chapter.exercises.map(renderExercise).join("")}</ol>
+            </div>
+            <div class="panel-side">
+              <div class="side-block"><h4>Checkpoint questions</h4><ol>${chapter.questions.map(q => `<li>${fmt(q)}</li>`).join("")}</ol></div>
+              <div class="side-block"><h4>Read</h4><ul>${chapter.sources.map(s => `<li>${fmt(s)}</li>`).join("")}</ul></div>
+              ${optional}
+              <div class="side-block"><h4>Done when</h4><div class="gate">${fmt(chapter.gate)}</div></div>
+              <div class="side-block"><h4>Run</h4><code class="cmd">${escapeHtml(chapter.cmd)}</code></div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderChapters() {
+      document.getElementById("tabs").innerHTML = PLAN.map(chapter => `
+        <button class="tab ${chapterStatus(chapter)}" role="tab" id="tab-${chapter.id}" data-chapter="${chapter.id}"
+                aria-controls="panel-${chapter.id}" aria-selected="false" tabindex="-1">${escapeHtml(chapter.tab)}</button>`).join("");
+      document.getElementById("panels").innerHTML = PLAN.map(renderPanel).join("");
+    }
+
+    function selectChapter(id, focusTab) {
+      for (const chapter of PLAN) {
+        const selected = chapter.id === id;
+        const tab = document.getElementById(`tab-${chapter.id}`);
+        tab.setAttribute("aria-selected", selected);
+        tab.tabIndex = selected ? 0 : -1;
+        document.getElementById(`panel-${chapter.id}`).hidden = !selected;
+        if (selected && focusTab) tab.focus();
+      }
+      for (const stage of document.querySelectorAll(".stage")) {
+        stage.setAttribute("aria-current", stage.dataset.chapter === id);
+      }
+    }
+
+    function onTabKey(event) {
+      const ids = PLAN.map(c => c.id);
+      const index = ids.indexOf(event.target.dataset.chapter);
+      const moves = { ArrowRight: 1, ArrowLeft: -1 };
+      if (event.key in moves) {
+        selectChapter(ids[(index + moves[event.key] + ids.length) % ids.length], true);
+        event.preventDefault();
+      }
+    }
+
+    function onTabClick(event) {
+      const tab = event.target.closest(".tab");
+      if (tab) selectChapter(tab.dataset.chapter, false);
+    }
+
+    function onStageClick(event) {
+      const stage = event.target.closest(".stage");
+      if (!stage) return;
+      selectChapter(stage.dataset.chapter, false);
+      document.getElementById("chapters").scrollIntoView();
+    }
+
+    const current = findCurrent();
+    renderMeter();
+    renderNow(current);
+    renderPath();
+    renderChapters();
+    selectChapter(current ? current.chapter.id : PLAN[0].id, false);
+
+    document.getElementById("tabs").addEventListener("click", onTabClick);
+    document.getElementById("tabs").addEventListener("keydown", onTabKey);
+    document.getElementById("path-map").addEventListener("click", onStageClick);
+  </script>
 </body>
 </html>
