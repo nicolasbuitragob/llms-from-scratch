@@ -18,7 +18,9 @@ dependencies = [
     "torch>=2.2.2 ; platform_machine != 'x86_64' or sys_platform != 'darwin'",
     "torch>=2.2.2,<2.6 ; platform_machine == 'x86_64' and sys_platform == 'darwin'",
     "tqdm>=4.66.1",
+    "ty>=0.0.86",
 ]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+testpaths = ["student"]

@@ -212,7 +212,7 @@
     .cmd { display: block; font: 0.84rem var(--mono); padding: 10px 12px; border-radius: 8px; background: var(--dark-panel); color: var(--dark-panel-ink); }
 
     /* Method */
-    .loop { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; counter-reset: step; }
+    .loop { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; counter-reset: step; }
     .loop li {
       list-style: none; counter-increment: step;
       background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
@@ -342,6 +342,7 @@
       </div>
 
       <ol class="loop">
+        <li><b>Recall</b>From memory: questions on past topics. No notes.</li>
         <li><b>Read</b>Only the named book section.</li>
         <li><b>Explain</b>Input, output, and invariant in your words.</li>
         <li><b>Answer</b>Checkpoint questions without code.</li>
@@ -423,7 +424,7 @@
           <h3>Your workspace</h3>
 <pre><code>student/
   ch01/  warmup.py, pipeline_notes.md, toy_next_token.py
-  ch02/  tokenizer.py, dataset.py, embeddings.py
+  ch02/  tokenizer.py, bpe_tokenizer.py, dataset.py, embeddings.py
   ch03/  attention.py
   ch04/  gpt.py, generate.py
   ch05/  train.py, evaluate.py, sample.py, weights.py
@@ -596,13 +597,13 @@ LLMs-from-scratch/pkg/llms_from_scratch/
         gate: "You trace text to `(B, T, D)` without notes, and every edge case has intentional behavior.",
         cmd: "pytest student/ch02/tests -q",
         exercises: [
-          { sec: "2.1–2.4", title: "Simple tokenizer and vocabulary", status: "progress", files: ["student/ch02/tokenizer.py", "student/ch02/tests/test_tokenizer.py"],
+          { sec: "2.1–2.4", title: "Simple tokenizer and vocabulary", status: "done", files: ["student/ch02/tokenizer.py", "student/ch02/tests/test_tokenizer.py"],
             build: "Split words and punctuation. Build stable token↔ID maps with `<|unk|>` and `<|endoftext|>`. Implement `encode` and `decode`.",
             tests: ["Punctuation is split from words", "No duplicate vocabulary entries", "Stable IDs for a fixed input", "Both special tokens exist", "`decode(encode(text))` follows your spacing rules", "Unknown word → `<|unk|>` or a clear error", "Invalid ID fails clearly"] },
-          { sec: "2.5", title: "BPE with tiktoken", status: "todo", files: ["student/ch02/tests/test_tokenizer.py"],
+          { sec: "2.5", title: "BPE with tiktoken", status: "done", files: ["student/ch02/bpe_tokenizer.py", "student/ch02/tests/test_bpe_tokenizer.py"],
             build: "Use `tiktoken.get_encoding(\"gpt2\")`. Explore unseen words, whitespace, and special tokens. Do not build BPE yet.",
             tests: ["Round trip on simple text", "Unseen word encodes without `<|unk|>`", "`<|endoftext|>` needs explicit permission", "Same input gives same IDs"] },
-          { sec: "2.6", title: "Sliding windows, Dataset, DataLoader", status: "todo", files: ["student/ch02/dataset.py", "student/ch02/tests/test_dataset.py"],
+          { sec: "2.6", title: "Sliding windows, Dataset, DataLoader", status: "progress", files: ["student/ch02/dataset.py", "student/ch02/tests/test_dataset.py"],
             build: "Windows with `context_length` and `stride`. Targets shifted by one. Wrap in a `Dataset` and a `DataLoader`.",
             tests: ["Exact values of one input/target pair", "Dataset length for different strides", "Item shape `(context_length,)`, dtype `torch.long`", "Batch shape `(batch_size, context_length)`", "Short text behavior is explicit", "Invalid context length or stride fails clearly"] },
           { sec: "2.7–2.8", title: "Token and positional embeddings", status: "todo", files: ["student/ch02/embeddings.py", "student/ch02/tests/test_embeddings.py"],

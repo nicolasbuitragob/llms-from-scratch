@@ -69,8 +69,6 @@ class SimpleTokenizerV1:
 
 
         return decoded
-    
-            
 
 if __name__ == '__main__':
     # Example usage
